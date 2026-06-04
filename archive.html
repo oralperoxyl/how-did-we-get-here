@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>archive — how_did_we_get_here</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -302,13 +302,32 @@ body::after {
     transform: translateY(0);
   }
   .win98-titlebar { cursor: default; }
-  /* overlay behind drawer */
+  /* overlay behind drawer — must not block touches inside window */
   .win98-window.active::before {
     content: '';
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.55);
     z-index: -1;
     pointer-events: none;
+  }
+  /* ensure photo strip and thumbs are fully tappable */
+  .photo-strip { position: relative; z-index: 10; }
+  .photo-thumb {
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(100,150,255,0.2);
+    touch-action: manipulation;
+  }
+  /* photo viewer on mobile — full width, higher z */
+  #photo-viewer {
+    z-index: 4000 !important;
+    width: 96vw !important;
+    left: 2vw !important;
+    top: 5vh !important;
+    bottom: auto !important;
+    transform: none !important;
+    transition: none !important;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 }
 
@@ -318,6 +337,7 @@ body::after {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.55);
   z-index: 1900;
+  -webkit-tap-highlight-color: transparent;
 }
 #mobile-overlay.active { display: block; }
 
@@ -635,9 +655,13 @@ body::after {
 /* ===== STATUS BAR ===== */
 #status-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
-  height: 22px; background: var(--panel-light);
+  height: calc(22px + env(safe-area-inset-bottom));
+  background: var(--panel-light);
   border-top: 1px solid var(--border-light);
-  display: flex; align-items: center; padding: 0 8px;
+  display: flex; align-items: flex-start; padding: 0 8px;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: max(8px, env(safe-area-inset-left));
+  padding-right: max(8px, env(safe-area-inset-right));
   z-index: 500; font-family: Tahoma, sans-serif;
   font-size: 11px; color: var(--text-dim);
 }
@@ -968,8 +992,8 @@ body::after {
     <img id="pv-img" src="" alt="">
   </div>
   <div class="pv-toolbar">
-    <button class="btn98" style="min-width:0;padding:3px 10px;" onclick="pvNav(-1)">◄</button>
-    <button class="btn98" style="min-width:0;padding:3px 10px;" onclick="pvNav(1)">►</button>
+    <button class="btn98" style="min-width:0;padding:3px 10px;touch-action:manipulation;" onclick="pvNav(-1)">◄</button>
+    <button class="btn98" style="min-width:0;padding:3px 10px;touch-action:manipulation;" onclick="pvNav(1)">►</button>
     <span class="pv-counter" id="pv-counter"></span>
     <span class="pv-filename" id="pv-filename"></span>
   </div>
@@ -1506,6 +1530,20 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePhotoViewer();
 });
 
+// swipe support on mobile
+(function() {
+  let swipeStartX = 0;
+  const pvImg = document.getElementById('pv-img');
+  if (!pvImg) return;
+  pvImg.addEventListener('touchstart', (e) => {
+    swipeStartX = e.touches[0].clientX;
+  }, { passive: true });
+  pvImg.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 40) pvNav(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
 // ===== RETRO AUDIO PLAYER =====
 function buildRetroPlayer(src) {
   const audio = new Audio(src);
@@ -1641,7 +1679,20 @@ function injectMedia() {
         thumb.src   = item.src;
         thumb.alt   = '';
         thumb.title = item.src.split('/').pop();
+        thumb.style.touchAction = 'manipulation';
+
+        // use both click and touchend for max compatibility
+        let touchMoved = false;
+        thumb.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+        thumb.addEventListener('touchmove',  () => { touchMoved = true;  }, { passive: true });
+        thumb.addEventListener('touchend', (e) => {
+          if (!touchMoved) {
+            e.preventDefault();
+            openPhotoViewer(srcs, idx);
+          }
+        });
         thumb.addEventListener('click', () => openPhotoViewer(srcs, idx));
+
         strip.appendChild(thumb);
       });
 
