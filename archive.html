@@ -356,8 +356,115 @@ body::after {
 
 /* Медиа-контейнер внутри окна */
 .win98-media { margin-top: 12px; }
-.win98-media video, .win98-media audio {
+.win98-media video {
   width: 100%; margin-bottom: 6px;
+}
+
+/* Ретро аудиоплеер — Winamp стиль */
+.retro-player {
+  margin-top: 10px;
+  background: #1a1a1a;
+  border-top: 1px solid #555; border-left: 1px solid #555;
+  border-right: 1px solid #222; border-bottom: 1px solid #222;
+  font-family: 'Courier New', monospace;
+  user-select: none;
+}
+.rp-titlebar {
+  background: linear-gradient(180deg, #2a2a4a, #1a1a3a);
+  padding: 3px 6px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #333;
+}
+.rp-title-text {
+  font-size: 9px; color: #6688cc; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.rp-title-dots {
+  display: flex; gap: 3px;
+}
+.rp-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #333; border: 1px solid #444;
+}
+.rp-display {
+  background: #0a0a14;
+  padding: 6px 8px;
+  border-bottom: 1px solid #222;
+}
+.rp-track-name {
+  font-size: 9px; color: #4466aa;
+  letter-spacing: 1px; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rp-time-row {
+  display: flex; align-items: center; gap: 6px;
+}
+.rp-time {
+  font-size: 11px; color: #3355aa; min-width: 36px;
+  font-variant-numeric: tabular-nums;
+}
+.rp-progress-track {
+  flex: 1; height: 6px;
+  background: #0d0d20;
+  border-top: 1px solid #111; border-left: 1px solid #111;
+  border-right: 1px solid #333; border-bottom: 1px solid #333;
+  position: relative; cursor: pointer;
+}
+.rp-progress-fill {
+  height: 100%; background: #2244aa; width: 0%;
+  transition: width 0.2s linear;
+  position: relative;
+}
+.rp-progress-fill::after {
+  content: '';
+  position: absolute; right: -1px; top: -1px;
+  width: 3px; height: 8px;
+  background: #6688cc;
+}
+.rp-duration { font-size: 11px; color: #2a3a66; min-width: 36px; text-align: right; }
+.rp-controls {
+  display: flex; align-items: center; gap: 3px;
+  padding: 5px 6px;
+  background: #161622;
+}
+.rp-btn {
+  background: #2a2a3a;
+  border-top: 1px solid #444; border-left: 1px solid #444;
+  border-right: 1px solid #111; border-bottom: 1px solid #111;
+  color: #8899cc; font-size: 9px; padding: 3px 7px;
+  cursor: pointer; font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px; white-space: nowrap;
+}
+.rp-btn:active {
+  border-top: 1px solid #111; border-left: 1px solid #111;
+  border-right: 1px solid #444; border-bottom: 1px solid #444;
+}
+.rp-btn.playing { color: #66aaff; background: #222238; }
+.rp-vol-label { font-size: 9px; color: #2a3a66; margin-left: 4px; }
+.rp-vol-track {
+  width: 44px; height: 5px;
+  background: #0d0d20;
+  border-top: 1px solid #111; border-left: 1px solid #111;
+  border-right: 1px solid #333; border-bottom: 1px solid #333;
+  cursor: pointer; position: relative;
+}
+.rp-vol-fill {
+  height: 100%; background: #1a3366; width: 80%;
+}
+.rp-status {
+  padding: 2px 6px;
+  background: #0d0d1a;
+  border-top: 1px solid #111;
+  font-size: 9px; color: #1a2a55; letter-spacing: 1px;
+}
+@keyframes rp-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.rp-track-name.scrolling span {
+  display: inline-block;
+  animation: rp-scroll 8s linear infinite;
+  white-space: nowrap;
 }
 
 /* Превью фотографий */
@@ -1389,6 +1496,119 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePhotoViewer();
 });
 
+// ===== RETRO AUDIO PLAYER =====
+function buildRetroPlayer(src) {
+  const audio = new Audio(src);
+  const filename = src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'retro-player';
+  wrap.innerHTML = `
+    <div class="rp-titlebar">
+      <div class="rp-title-text">▸ AUDIO PLAYER v2.1</div>
+      <div class="rp-title-dots">
+        <div class="rp-dot" style="background:#cc4444"></div>
+        <div class="rp-dot" style="background:#ccaa22"></div>
+        <div class="rp-dot" style="background:#22aa44"></div>
+      </div>
+    </div>
+    <div class="rp-display">
+      <div class="rp-track-name"><span>${filename}</span></div>
+      <div class="rp-time-row">
+        <span class="rp-time rp-cur">0:00</span>
+        <div class="rp-progress-track">
+          <div class="rp-progress-fill"></div>
+        </div>
+        <span class="rp-duration rp-dur">0:00</span>
+      </div>
+    </div>
+    <div class="rp-controls">
+      <button class="rp-btn rp-play">▶ PLAY</button>
+      <button class="rp-btn rp-stop">■ STOP</button>
+      <span class="rp-vol-label">VOL</span>
+      <div class="rp-vol-track"><div class="rp-vol-fill"></div></div>
+    </div>
+    <div class="rp-status rp-statustext">● STOPPED</div>
+  `;
+
+  const playBtn    = wrap.querySelector('.rp-play');
+  const stopBtn    = wrap.querySelector('.rp-stop');
+  const fill       = wrap.querySelector('.rp-progress-fill');
+  const curTime    = wrap.querySelector('.rp-cur');
+  const durTime    = wrap.querySelector('.rp-dur');
+  const statusTxt  = wrap.querySelector('.rp-statustext');
+  const volFill    = wrap.querySelector('.rp-vol-fill');
+  const volTrack   = wrap.querySelector('.rp-vol-track');
+  const progTrack  = wrap.querySelector('.rp-progress-track');
+
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  audio.addEventListener('loadedmetadata', () => {
+    durTime.textContent = fmt(audio.duration);
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    fill.style.width = pct + '%';
+    curTime.textContent = fmt(audio.currentTime);
+  });
+
+  audio.addEventListener('ended', () => {
+    playBtn.textContent = '▶ PLAY';
+    playBtn.classList.remove('playing');
+    fill.style.width = '0%';
+    curTime.textContent = '0:00';
+    statusTxt.textContent = '● STOPPED';
+  });
+
+  playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playBtn.textContent = '❚❚ PAUSE';
+      playBtn.classList.add('playing');
+      statusTxt.textContent = '▶ PLAYING';
+    } else {
+      audio.pause();
+      playBtn.textContent = '▶ PLAY';
+      playBtn.classList.remove('playing');
+      statusTxt.textContent = '❚❚ PAUSED';
+    }
+  });
+
+  stopBtn.addEventListener('click', () => {
+    audio.pause();
+    audio.currentTime = 0;
+    playBtn.textContent = '▶ PLAY';
+    playBtn.classList.remove('playing');
+    fill.style.width = '0%';
+    curTime.textContent = '0:00';
+    statusTxt.textContent = '● STOPPED';
+  });
+
+  // click on progress to seek
+  progTrack.addEventListener('click', (e) => {
+    if (!audio.duration) return;
+    const rect = progTrack.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pct * audio.duration;
+  });
+
+  // volume
+  volTrack.addEventListener('click', (e) => {
+    const rect = volTrack.getBoundingClientRect();
+    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    audio.volume = pct;
+    volFill.style.width = (pct * 100) + '%';
+  });
+
+  return wrap;
+}
+
 // ===== MEDIA INJECTION =====
 function injectMedia() {
   for (const [winId, items] of Object.entries(mediaMap)) {
@@ -1418,13 +1638,10 @@ function injectMedia() {
       container.appendChild(strip);
     }
 
-    // audio / video
+    // audio — retro player
     otherItems.forEach(item => {
       if (item.type === 'audio') {
-        const a = document.createElement('audio');
-        a.controls = true; a.src = item.src;
-        a.style.cssText = 'width:100%;margin:6px 0;';
-        container.appendChild(a);
+        container.appendChild(buildRetroPlayer(item.src));
       } else if (item.type === 'video') {
         const v = document.createElement('video');
         v.controls = true; v.src = item.src; v.playsInline = true;
