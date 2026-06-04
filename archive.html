@@ -356,25 +356,97 @@ body::after {
 
 /* Медиа-контейнер внутри окна */
 .win98-media { margin-top: 12px; }
-.win98-media img {
-  width: 100%; max-width: 420px;
-  display: block; margin-bottom: 6px;
-  border: 1px solid var(--border-light);
-}
 .win98-media video, .win98-media audio {
   width: 100%; margin-bottom: 6px;
 }
 
-/* Заглушки фото */
-.win98-photo-area { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
-.win98-photo {
-  width: 120px; height: 90px; background: #111;
-  border: 1px solid var(--border-light);
-  display: flex; align-items: center; justify-content: center;
-  color: #555; font-size: 10px; font-family: 'Courier New', monospace;
-  flex-direction: column; gap: 4px;
+/* Превью фотографий */
+.photo-strip {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 8px;
+  padding: 6px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-top: 1px solid #555; border-left: 1px solid #555;
 }
-.win98-photo svg { opacity: 0.3; }
+.photo-thumb {
+  width: 72px; height: 54px;
+  object-fit: cover;
+  border: 2px solid #444;
+  border-top: 1px solid #222; border-left: 1px solid #222;
+  border-right: 1px solid #666; border-bottom: 1px solid #666;
+  cursor: pointer;
+  display: block;
+  transition: border-color 0.1s;
+  image-rendering: auto;
+}
+.photo-thumb:hover {
+  border-color: #6699cc;
+}
+.photo-thumb:active {
+  border-top: 1px solid #666; border-left: 1px solid #666;
+  border-right: 1px solid #222; border-bottom: 1px solid #222;
+}
+
+/* Просмотрщик фото — отдельное Win98 окно */
+#photo-viewer {
+  display: none;
+  position: fixed;
+  background: #1a1a1a;
+  border-top: 2px solid #fff; border-left: 2px solid #fff;
+  border-right: 2px solid #444; border-bottom: 2px solid #444;
+  z-index: 3000;
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.9);
+  font-family: Tahoma, sans-serif;
+  width: 520px; max-width: 96vw;
+}
+#photo-viewer.active { display: block; }
+
+.pv-titlebar {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: #fff; font-size: 12px; font-weight: bold;
+  padding: 4px 6px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: move; user-select: none;
+}
+.pv-titlebar-left { display: flex; align-items: center; gap: 5px; }
+
+.pv-body {
+  padding: 8px;
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 200px; position: relative;
+}
+#pv-img {
+  max-width: 100%; max-height: 60vh;
+  display: block;
+  border: 1px solid #333;
+}
+
+.pv-toolbar {
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+  padding: 4px 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.pv-counter {
+  font-family: 'Courier New', monospace;
+  font-size: 10px; color: #666;
+  margin-right: auto;
+}
+.pv-filename {
+  font-family: 'Courier New', monospace;
+  font-size: 10px; color: #444;
+  margin-left: auto;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+@media (max-width: 600px) {
+  #photo-viewer { width: 96vw; left: 2vw !important; }
+  #pv-img { max-height: 50vh; }
+  .photo-thumb { width: 60px; height: 45px; }
+}
 
 .win98-statusbar {
   background: var(--panel-light); border-top: 1px solid var(--border);
@@ -744,6 +816,30 @@ body::after {
     <div class="guestbook-entries" id="gb-entries"></div>
   </div>
   <div class="win98-statusbar"><span class="status-dot"></span> guestbook.txt &nbsp;|&nbsp; <span id="gb-count">0</span> записей</div>
+</div>
+
+<!-- PHOTO VIEWER -->
+<div id="photo-viewer">
+  <div class="pv-titlebar" onmousedown="startDrag(event,'photo-viewer')">
+    <div class="pv-titlebar-left">
+      <svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" fill="#2266aa"/><rect x="3" y="3" width="10" height="10" fill="#0a1a3a"/><circle cx="8" cy="8" r="3" fill="none" stroke="#4488cc" stroke-width="1"/></svg>
+      <span id="pv-title">просмотр изображения</span>
+    </div>
+    <div class="win98-controls">
+      <div class="win98-ctrl" onclick="closePhotoViewer()">×</div>
+    </div>
+  </div>
+  <div class="win98-menubar">Файл &nbsp; Вид &nbsp; Справка</div>
+  <div class="pv-body">
+    <img id="pv-img" src="" alt="">
+  </div>
+  <div class="pv-toolbar">
+    <button class="btn98" style="min-width:0;padding:3px 10px;" onclick="pvNav(-1)">◄</button>
+    <button class="btn98" style="min-width:0;padding:3px 10px;" onclick="pvNav(1)">►</button>
+    <span class="pv-counter" id="pv-counter"></span>
+    <span class="pv-filename" id="pv-filename"></span>
+  </div>
+  <div class="win98-statusbar"><span class="status-dot"></span> <span id="pv-status">image viewer — ready</span></div>
 </div>
 
 <!-- STATUS BAR -->
@@ -1208,26 +1304,95 @@ const mediaMap = {
   ],
 };
 
+// ===== PHOTO VIEWER =====
+let pvImages = [];
+let pvIndex  = 0;
+
+function openPhotoViewer(images, startIndex) {
+  pvImages = images;
+  pvIndex  = startIndex;
+  pvShow();
+
+  const viewer = document.getElementById('photo-viewer');
+  viewer.classList.add('active');
+  focusWin(viewer);
+
+  // position near center on desktop
+  if (!isMobile() && !viewer._positioned) {
+    viewer.style.left = Math.max(40, (window.innerWidth  - 520) / 2) + 'px';
+    viewer.style.top  = Math.max(40, (window.innerHeight - 400) / 2) + 'px';
+    viewer._positioned = true;
+  }
+}
+
+function pvShow() {
+  const img  = document.getElementById('pv-img');
+  const src  = pvImages[pvIndex];
+  img.src    = src;
+  document.getElementById('pv-counter').textContent  = (pvIndex + 1) + ' / ' + pvImages.length;
+  document.getElementById('pv-filename').textContent = src.split('/').pop();
+  document.getElementById('pv-title').textContent    = src.split('/').pop();
+  document.getElementById('pv-status').textContent   = src;
+}
+
+function pvNav(dir) {
+  pvIndex = (pvIndex + dir + pvImages.length) % pvImages.length;
+  pvShow();
+}
+
+function closePhotoViewer() {
+  document.getElementById('photo-viewer').classList.remove('active');
+  document.getElementById('photo-viewer')._positioned = false;
+}
+
+// keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('photo-viewer').classList.contains('active')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') pvNav(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   pvNav(-1);
+  if (e.key === 'Escape') closePhotoViewer();
+});
+
+// ===== MEDIA INJECTION =====
 function injectMedia() {
   for (const [winId, items] of Object.entries(mediaMap)) {
-    const container = document.getElementById('media-' + winId.replace('win-',''));
+    const container = document.getElementById('media-' + winId);
     if (!container) continue;
     container.innerHTML = '';
-    items.forEach(item => {
-      if (item.type === 'img') {
-        const img = document.createElement('img');
-        img.src = item.src; img.alt = '';
-        img.style.cssText = 'width:100%;max-width:420px;display:block;margin-bottom:6px;border:1px solid #333;';
-        container.appendChild(img);
-      } else if (item.type === 'audio') {
+
+    const imgItems   = items.filter(i => i.type === 'img');
+    const otherItems = items.filter(i => i.type !== 'img');
+
+    // photo strip
+    if (imgItems.length > 0) {
+      const srcs  = imgItems.map(i => i.src);
+      const strip = document.createElement('div');
+      strip.className = 'photo-strip';
+
+      imgItems.forEach((item, idx) => {
+        const thumb = document.createElement('img');
+        thumb.className = 'photo-thumb';
+        thumb.src   = item.src;
+        thumb.alt   = '';
+        thumb.title = item.src.split('/').pop();
+        thumb.addEventListener('click', () => openPhotoViewer(srcs, idx));
+        strip.appendChild(thumb);
+      });
+
+      container.appendChild(strip);
+    }
+
+    // audio / video
+    otherItems.forEach(item => {
+      if (item.type === 'audio') {
         const a = document.createElement('audio');
         a.controls = true; a.src = item.src;
-        a.style.cssText = 'width:100%;margin-bottom:6px;';
+        a.style.cssText = 'width:100%;margin:6px 0;';
         container.appendChild(a);
       } else if (item.type === 'video') {
         const v = document.createElement('video');
         v.controls = true; v.src = item.src; v.playsInline = true;
-        v.style.cssText = 'width:100%;margin-bottom:6px;border:1px solid #333;';
+        v.style.cssText = 'width:100%;margin:6px 0;border:1px solid #333;';
         container.appendChild(v);
       }
     });
