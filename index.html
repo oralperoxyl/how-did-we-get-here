@@ -94,6 +94,21 @@ body { animation: crt-flicker 9s infinite; }
   font-size: 13px; color: #555;
 }
 
+/* Typewriter */
+.tw-cursor {
+  display: inline-block;
+  width: 1px; height: 1.1em;
+  background: #c0c0c0;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: blink 0.75s step-end infinite;
+}
+.tw-cursor.dim { background: #555; }
+
+/* Window content starts invisible, fades in as typed */
+.win98-content p { color: #c8c8c8; }
+.win98-content .tw-line { color: #c8c8c8; display: block; min-height: 1.85em; }
+
 .btn98 {
   background: var(--btn-face); color: #000;
   border: none;
@@ -409,12 +424,12 @@ body { animation: crt-flicker 9s infinite; }
 
 <!-- MAIN SCREEN -->
 <div id="main-screen">
-  <div class="site-header">how_did_we_get_here.html — v1.0 — 2003</div>
+  <div class="site-header" id="site-header-text"></div>
   <div class="main-quote">
-    <span>Если посмотреть на эту комнату,</span>
-    <span class="cursor-blink">то почти никто из вас не должен был здесь оказаться.</span>
+    <span id="quote-line1"></span>
+    <span id="quote-line2"></span>
   </div>
-  <button class="btn98 why-btn" onclick="showDesktop()">[ почему? ]</button>
+  <button class="btn98 why-btn" id="why-btn" onclick="showDesktop()" style="opacity:0;pointer-events:none">[ почему? ]</button>
   <div class="show-hint" id="hint" style="display:none">— нажмите на иконку, чтобы открыть файл —</div>
 </div>
 
@@ -438,11 +453,11 @@ body { animation: crt-flicker 9s infinite; }
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-krasnoyarsk')">×</div></div>
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Вид &nbsp; Справка</div>
-  <div class="win98-content">
-    <p>Один граффитчик не пришёл на встречу.</p>
-    <p>Я написал первому попавшемуся человеку на форуме.</p>
-    <p>Так появился Саня.</p>
-    <p>А потом и часть людей в этой комнате.</p>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-krasnoyarsk">
       <div class="win98-photo-area">
         <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="15" rx="1" stroke="#888" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="#888" stroke-width="1.5"/><circle cx="18" cy="8" r="1.5" fill="#888"/></svg><span>photo_001.jpg</span></div>
@@ -463,11 +478,11 @@ body { animation: crt-flicker 9s infinite; }
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-vk')">×</div></div>
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Формат &nbsp; Справка</div>
-  <div class="win98-content">
-    <p>Я увидел комментарий под постом и написал какую-то ерунду.</p>
-    <p>Меня послали нахуй.</p>
-    <p>Так появился Петербург.</p>
-    <p>И много людей, которых я иначе бы никогда не встретил.</p>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-vk">
       <div class="win98-photo-area">
         <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="15" rx="1" stroke="#888" stroke-width="1.5"/><path d="M2 16l5-5 4 4 3-3 8 7" stroke="#888" stroke-width="1.5"/></svg><span>spb_night.jpg</span></div>
@@ -487,11 +502,11 @@ body { animation: crt-flicker 9s infinite; }
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-ralph')">×</div></div>
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Вид &nbsp; Справка</div>
-  <div class="win98-content">
-    <p>Кто-то написал по поводу рубашки на Авито.</p>
-    <p>Мы встретились, разговорились.</p>
-    <p>Так появился Кирилл.</p>
-    <p>А потом и Егор.</p>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-ralph">
       <div class="win98-photo-area">
         <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1z" stroke="#888" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#888" stroke-width="1.5"/></svg><span>polo_shirt.jpg</span></div>
@@ -512,11 +527,11 @@ body { animation: crt-flicker 9s infinite; }
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-coldcall')">×</div></div>
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Эффекты &nbsp; Справка</div>
-  <div class="win98-content">
-    <p>Один из сотен холодных звонков.</p>
-    <p>Обычный рабочий день.</p>
-    <p>Так появился Никита.</p>
-    <p>И ещё несколько людей из этой комнаты.</p>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-coldcall">
       <div class="win98-photo-area">
         <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.93 9.79a19.79 19.79 0 01-3.07-8.67A2 2 0 012.84 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.64a16 16 0 006.27 6.27l.96-.96a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#888" stroke-width="1.5"/></svg><span>call_log.jpg</span></div>
@@ -536,11 +551,11 @@ body { animation: crt-flicker 9s infinite; }
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-depo')">×</div></div>
   </div>
   <div class="win98-menubar" style="background:#1a1a2e;color:#4488cc;border-color:#333;">MAIN &nbsp; EQ &nbsp; PL &nbsp; ML</div>
-  <div class="win98-content">
-    <p>Я уже собирался удалять анкету.</p>
-    <p>Увидел упоминание Boulevard Depo.</p>
-    <p>Подумал: почему бы не написать.</p>
-    <p>Так появилась Маша.</p>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-depo">
       <div class="wamp-bar">
         <div>▶ Boulevard Depo — ...</div>
@@ -561,10 +576,10 @@ body { animation: crt-flicker 9s infinite; }
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-konica')">×</div></div>
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Вид</div>
-  <div class="win98-content">
-    <p>На этой плёнке 36 кадров.</p>
-    <p>Каждый гость может оставить один.</p>
-    <p>Интересно посмотреть, каким окажется этот вечер глазами разных людей.</p>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="film-strip">
       <div class="film-frame"></div><div class="film-frame"></div>
       <div class="film-frame"></div><div class="film-frame"></div>
@@ -731,6 +746,9 @@ function openWin(id) {
 
   // render guestbook when opened
   if (id === 'win-guestbook') renderGuestbook();
+
+  // typewriter effect for content
+  setTimeout(() => typeWindowContent(id), 80);
 }
 
 function closeWin(id) {
@@ -836,7 +854,113 @@ function esc(s) {
 }
 renderGuestbook();
 
-// ===== MEDIA INJECTION =====
+// ===== TYPEWRITER =====
+const twTexts = {
+  'win-krasnoyarsk': [
+    'Один граффитчик не пришёл на встречу.',
+    'Я написал первому попавшемуся человеку на форуме.',
+    'Так появился Саня.',
+    'А потом и часть людей в этой комнате.',
+  ],
+  'win-vk': [
+    'Я увидел комментарий под постом и написал какую-то ерунду.',
+    'Меня послали нахуй.',
+    'Так появился Петербург.',
+    'И много людей, которых я иначе бы никогда не встретил.',
+  ],
+  'win-ralph': [
+    'Кто-то написал по поводу рубашки на Авито.',
+    'Мы встретились, разговорились.',
+    'Так появился Кирилл.',
+    'А потом и Егор.',
+  ],
+  'win-coldcall': [
+    'Один из сотен холодных звонков.',
+    'Обычный рабочий день.',
+    'Так появился Никита.',
+    'И ещё несколько людей из этой комнаты.',
+  ],
+  'win-depo': [
+    'Я уже собирался удалять анкету.',
+    'Увидел упоминание Boulevard Depo.',
+    'Подумал: почему бы не написать.',
+    'Так появилась Маша.',
+  ],
+  'win-konica': [
+    'На этой плёнке 36 кадров.',
+    'Каждый гость может оставить один.',
+    'Интересно посмотреть, каким окажется этот вечер глазами разных людей.',
+  ],
+};
+
+// Type characters one by one into an element, return promise
+function typeInto(el, text, speed) {
+  return new Promise(resolve => {
+    el.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'tw-cursor';
+    el.appendChild(cursor);
+    let i = 0;
+    const tick = () => {
+      if (i < text.length) {
+        el.insertBefore(document.createTextNode(text[i]), cursor);
+        i++;
+        setTimeout(tick, speed + Math.random() * speed * 0.6);
+      } else {
+        cursor.remove();
+        resolve();
+      }
+    };
+    tick();
+  });
+}
+
+async function typeWindowContent(winId) {
+  const win = document.getElementById(winId);
+  if (!win) return;
+  const content = win.querySelector('.win98-content[data-typed="false"]');
+  if (!content) return;
+  content.setAttribute('data-typed', 'true');
+
+  const lines = twTexts[winId];
+  if (!lines) return;
+  const spans = content.querySelectorAll('.tw-line');
+
+  for (let i = 0; i < lines.length && i < spans.length; i++) {
+    // pause between lines — slightly longer gap for short punchy lines
+    const pauseBefore = i === 0 ? 120 : 80 + Math.random() * 60;
+    await new Promise(r => setTimeout(r, pauseBefore));
+    await typeInto(spans[i], lines[i], 22);
+  }
+}
+
+// ===== MAIN SCREEN TYPEWRITER =====
+async function typeMainScreen() {
+  const header = document.getElementById('site-header-text');
+  const line1  = document.getElementById('quote-line1');
+  const line2  = document.getElementById('quote-line2');
+  const btn    = document.getElementById('why-btn');
+
+  await new Promise(r => setTimeout(r, 300));
+  await typeInto(header, 'how_did_we_get_here.html — v1.0 — 2003', 28);
+  await new Promise(r => setTimeout(r, 500));
+  await typeInto(line1, 'Если посмотреть на эту комнату,', 32);
+  await new Promise(r => setTimeout(r, 200));
+  await typeInto(line2, 'то почти никто из вас не должен был здесь оказаться.', 30);
+
+  // blinking cursor stays on line2
+  const cursor = document.createElement('span');
+  cursor.className = 'tw-cursor dim';
+  line2.appendChild(cursor);
+
+  await new Promise(r => setTimeout(r, 400));
+  btn.style.transition = 'opacity 0.4s';
+  btn.style.opacity = '1';
+  btn.style.pointerEvents = 'auto';
+}
+
+document.addEventListener('DOMContentLoaded', typeMainScreen);
+
 // После того как ты загрузишь медиа, вставь пути сюда.
 // Формат: { windowId: [ { type: 'img'|'audio'|'video', src: '...' }, ... ] }
 // Пример:
