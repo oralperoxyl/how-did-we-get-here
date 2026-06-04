@@ -65,15 +65,28 @@ html, body {
   100% { top: 100vh; opacity:0; }
 }
 @keyframes vhs-glitch {
-  0%,93%,100% { clip-path: none; transform: none; }
-  94% { clip-path: polygon(0 30%, 100% 30%, 100% 33%, 0 33%); transform: translateX(-3px); }
-  95% { clip-path: polygon(0 60%, 100% 60%, 100% 62%, 0 62%); transform: translateX(2px); }
-  96% { clip-path: none; transform: none; }
-  97% { clip-path: polygon(0 10%, 100% 10%, 100% 12%, 0 12%); transform: translateX(-1px); }
-  98% { clip-path: none; transform: none; }
+  0%,93%,100% { opacity: 0; }
+  94% { opacity: 1; transform: translateX(-2px); }
+  95% { opacity: 1; transform: translateX(2px); }
+  96% { opacity: 0; }
 }
 
-body { animation: crt-flicker 7s infinite; }
+body { animation: none; }
+
+/* flicker overlay — отдельный div, контент не трогает */
+.vhs-flicker {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9994;
+  animation: crt-flicker-overlay 7s infinite;
+  background: rgba(0,0,0,0);
+}
+@keyframes crt-flicker-overlay {
+  0%,100%  { background: rgba(0,0,0,0); }
+  89%      { background: rgba(0,0,0,0.12); }
+  90%      { background: rgba(0,0,0,0); }
+  94%      { background: rgba(0,0,0,0.07); }
+  95%      { background: rgba(0,0,0,0); }
+}
 
 /* grain noise */
 body::before {
@@ -117,12 +130,13 @@ body::after {
   animation: vhs-tracking 8s linear infinite;
 }
 
-/* glitch layer */
+/* glitch layer — лёгкий цветовой сдвиг, без clip-path */
 .vhs-glitch {
   position: fixed; inset: 0;
-  pointer-events: none; z-index: 9995;
+  pointer-events: none; z-index: 9993;
+  background: linear-gradient(90deg, rgba(255,0,0,0.015), rgba(0,255,255,0.015));
   animation: vhs-glitch 11s infinite;
-  background: inherit;
+  opacity: 0;
 }
 
 /* ===== MAIN SCREEN ===== */
@@ -156,16 +170,15 @@ body::after {
   font-size: 13px; color: #555;
 }
 
-/* Typewriter */
+/* Typewriter cursor — inline, moves with text */
 .tw-cursor {
-  display: inline-block;
-  width: 1px; height: 1.1em;
-  background: #c0c0c0;
-  vertical-align: text-bottom;
-  margin-left: 1px;
+  display: inline;
+  color: #c0c0c0;
+  font-weight: normal;
   animation: blink 0.75s step-end infinite;
+  margin-left: 1px;
 }
-.tw-cursor.dim { background: #555; }
+.tw-cursor.dim { color: #555; }
 
 /* Window content starts invisible, fades in as typed */
 .win98-content p { color: #c8c8c8; }
@@ -446,7 +459,7 @@ body::after {
 #footer-quote {
   text-align: center; padding: 28px 20px 44px;
   font-family: 'Courier New', monospace; font-size: 11px;
-  color: #666; letter-spacing: 0.4px; line-height: 1.9;
+  color: #999; letter-spacing: 0.4px; line-height: 1.9;
 }
 
 /* ===== WINDOW z-focus ===== */
@@ -504,6 +517,7 @@ body::after {
 <div class="vhs-overlay"></div>
 <div class="vhs-line"></div>
 <div class="vhs-glitch"></div>
+<div class="vhs-flicker"></div>
 <div id="mobile-overlay" onclick="closeMobileOverlay()"></div>
 <a class="back-link" href="index.html">← index</a>
 
@@ -543,6 +557,8 @@ body::after {
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-krasnoyarsk">
       <div class="win98-photo-area">
         <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="15" rx="1" stroke="#888" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="#888" stroke-width="1.5"/><circle cx="18" cy="8" r="1.5" fill="#888"/></svg><span>photo_001.jpg</span></div>
@@ -564,6 +580,8 @@ body::after {
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Формат &nbsp; Справка</div>
   <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
@@ -592,6 +610,7 @@ body::after {
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <div class="win98-media" id="media-ralph">
       <div class="win98-photo-area">
         <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1z" stroke="#888" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#888" stroke-width="1.5"/></svg><span>polo_shirt.jpg</span></div>
@@ -607,12 +626,13 @@ body::after {
   <div class="win98-titlebar" onmousedown="startDrag(event,'win-coldcall')">
     <div class="win98-titlebar-left">
       <svg class="win98-icon-small" viewBox="0 0 16 16"><rect x="1" y="4" width="10" height="8" fill="#c0c0c0" stroke="#888" stroke-width="0.5"/><path d="M11 6l4-2v8l-4-2V6z" fill="#808080"/></svg>
-      cold_call.wav — Звукозапись
+      cold_call.wav — Никита, 2020
     </div>
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-coldcall')">×</div></div>
   </div>
   <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Эффекты &nbsp; Справка</div>
   <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
@@ -631,12 +651,14 @@ body::after {
   <div class="win98-titlebar" onmousedown="startDrag(event,'win-depo')">
     <div class="win98-titlebar-left">
       <svg class="win98-icon-small" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" fill="#1a1a3a"/><path d="M5 8 Q8 4 11 8 Q8 12 5 8Z" fill="#4466aa"/><circle cx="8" cy="8" r="1.5" fill="#88aacc"/></svg>
-      boulevard_depo.mp3 — Winamp
+      boulevard_depo.mp3 — Маша, 2021
     </div>
     <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-depo')">×</div></div>
   </div>
   <div class="win98-menubar" style="background:#1a1a2e;color:#4488cc;border-color:#333;">MAIN &nbsp; EQ &nbsp; PL &nbsp; ML</div>
   <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
@@ -649,6 +671,30 @@ body::after {
     </div>
   </div>
   <div class="win98-statusbar"><span class="status-dot"></span> boulevard_depo.mp3 &nbsp;|&nbsp; 192kbps</div>
+</div>
+
+<!-- covid.exe -->
+<div class="win98-window" id="win-covid">
+  <div class="win98-titlebar" onmousedown="startDrag(event,'win-covid')">
+    <div class="win98-titlebar-left">
+      <svg class="win98-icon-small" viewBox="0 0 16 16"><path d="M1 5 Q1 4 2 4 L6 4 L7 5.5 L14 5.5 Q15 5.5 15 6.5 L15 13 Q15 14 14 14 L2 14 Q1 14 1 13Z" fill="#c8a830" stroke="#a07820" stroke-width="0.5"/><path d="M1 7 L15 7 L15 13 Q15 14 14 14 L2 14 Q1 14 1 13Z" fill="#f0c040" stroke="#a07820" stroke-width="0.5"/></svg>
+      covid.exe — Тренд, 2020
+    </div>
+    <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-covid')">×</div></div>
+  </div>
+  <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Вид &nbsp; Справка</div>
+  <div class="win98-content" data-typed="false">
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <div class="win98-media" id="media-covid">
+      <div class="win98-photo-area">
+        <div class="win98-photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="15" rx="1" stroke="#888" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="#888" stroke-width="1.5"/><circle cx="18" cy="8" r="1.5" fill="#888"/></svg><span>trend_office.jpg</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="win98-statusbar"><span class="status-dot"></span> covid.exe — открыт</div>
 </div>
 
 <!-- konica.exe -->
@@ -711,7 +757,7 @@ body::after {
 </div>
 
 <div id="footer-quote">
-  "Самые важные события почти никогда не выглядят важными в тот момент, когда происходят."
+  Самые важные события почти никогда не выглядят важными в тот момент, когда происходят.
 </div>
 
 <script>
@@ -726,17 +772,19 @@ const iconSVGs = {
   wav: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="24" height="28" fill="#c0c0c0" stroke="#888" stroke-width="1"/><rect x="4" y="12" width="20" height="12" fill="#000080"/><path d="M5 18 Q8 13 11 18 Q14 23 17 18 Q20 13 23 18" fill="none" stroke="#6699cc" stroke-width="1.5"/><text x="5" y="30" font-size="5" fill="#333" font-family="Tahoma">WAV</text></svg>`,
   mp3: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="24" height="28" fill="#1a1a3a" stroke="#333" stroke-width="1"/><circle cx="14" cy="17" r="8" fill="none" stroke="#4466aa" stroke-width="1.5"/><circle cx="14" cy="17" r="3" fill="#333" stroke="#4466aa" stroke-width="1"/><circle cx="14" cy="17" r="1" fill="#4466aa"/><text x="5" y="30" font-size="5" fill="#4466aa" font-family="Tahoma">MP3</text></svg>`,
   cam: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="8" width="28" height="20" rx="2" fill="#c0c0c0" stroke="#888" stroke-width="1"/><circle cx="16" cy="18" r="6" fill="#444" stroke="#888" stroke-width="1.5"/><circle cx="16" cy="18" r="3" fill="#222"/><rect x="10" y="4" width="6" height="4" fill="#aaa" stroke="#888" stroke-width="1"/><rect x="24" y="10" width="4" height="3" fill="#888"/></svg>`,
-  guest: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="24" height="28" fill="#fffff0" stroke="#888" stroke-width="1"/><path d="M5 8h18M5 11h18M5 14h12" stroke="#888" stroke-width="1.2"/><path d="M14 20l4-4 2 2-4 4-2-2z" fill="#666" stroke="#555" stroke-width="0.5"/><circle cx="26" cy="26" r="4" fill="#ffcc00" stroke="#aaa" stroke-width="0.5"/><path d="M24 26l2 2 4-4" stroke="#666" stroke-width="1"/></svg>`
+  guest: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="24" height="28" fill="#fffff0" stroke="#888" stroke-width="1"/><path d="M5 8h18M5 11h18M5 14h12" stroke="#888" stroke-width="1.2"/><path d="M14 20l4-4 2 2-4 4-2-2z" fill="#666" stroke="#555" stroke-width="0.5"/><circle cx="26" cy="26" r="4" fill="#ffcc00" stroke="#aaa" stroke-width="0.5"/><path d="M24 26l2 2 4-4" stroke="#666" stroke-width="1"/></svg>`,
+  folder: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 Q2 6 4 6 L12 6 L14 9 L28 9 Q30 9 30 11 L30 26 Q30 28 28 28 L4 28 Q2 28 2 26Z" fill="#c8a830" stroke="#a07820" stroke-width="1"/><path d="M2 11 L30 11 L30 26 Q30 28 28 28 L4 28 Q2 28 2 26Z" fill="#f0c040" stroke="#a07820" stroke-width="0.5"/></svg>`
 };
 
 const fileObjects = [
-  { id: 'win-krasnoyarsk', label: 'krasnoyarsk.exe', icon: 'exe', x: 7,  y: 7  },
-  { id: 'win-vk',          label: 'vk_comment.txt',  icon: 'txt', x: 20, y: 44 },
-  { id: 'win-ralph',       label: 'ralph_lauren.jpg', icon: 'jpg', x: 58, y: 9  },
-  { id: 'win-coldcall',    label: 'cold_call.wav',    icon: 'wav', x: 71, y: 48 },
-  { id: 'win-depo',        label: 'boulevard_depo.mp3', icon: 'mp3', x: 34, y: 19 },
-  { id: 'win-konica',      label: 'konica.exe',       icon: 'cam', x: 48, y: 58 },
-  { id: 'win-guestbook',   label: 'guestbook.txt',    icon: 'guest', x: 14, y: 70 },
+  { id: 'win-krasnoyarsk', label: 'krasnoyarsk.exe',   icon: 'exe',    x: 7,  y: 7  },
+  { id: 'win-vk',          label: 'vk_comment.txt',    icon: 'txt',    x: 20, y: 46 },
+  { id: 'win-ralph',       label: 'ralph_lauren.jpg',  icon: 'jpg',    x: 58, y: 9  },
+  { id: 'win-coldcall',    label: 'cold_call.wav',     icon: 'wav',    x: 72, y: 50 },
+  { id: 'win-covid',       label: 'covid.exe',         icon: 'folder', x: 38, y: 60 },
+  { id: 'win-depo',        label: 'boulevard_depo.mp3',icon: 'mp3',    x: 34, y: 20 },
+  { id: 'win-konica',      label: 'konica.exe',        icon: 'cam',    x: 55, y: 42 },
+  { id: 'win-guestbook',   label: 'guestbook.txt',     icon: 'guest',  x: 14, y: 72 },
 ];
 
 function showDesktop() {
@@ -805,6 +853,7 @@ const desktopOffsets = {
   'win-vk':          [160, 100],
   'win-ralph':       [240, 80],
   'win-coldcall':    [120, 145],
+  'win-covid':       [320, 130],
   'win-depo':        [300, 60],
   'win-konica':      [200, 165],
   'win-guestbook':   [100, 85],
@@ -999,34 +1048,48 @@ function esc(s) {
 // ===== TYPEWRITER =====
 const twTexts = {
   'win-krasnoyarsk': [
-    'Один граффитчик не пришёл на встречу.',
-    'Я написал первому попавшемуся человеку на форуме.',
-    'Так появился Саня.',
-    'А потом и часть людей в этой комнате.',
+    'Красноярск, 2010.',
+    'Договорился с одним чуваком порисовать граффити. Он продинамил — не взял трубку.',
+    'Я психанул и написал первому попавшемуся на местном форуме. Попросил поводить по городу.',
+    'Саня вылез в лютый дождь встречать рандомного чела. До сих пор не понимаю, зачем ему это было нужно.',
+    'Почти 15 лет. Заводы в Корее. Автостоп через полстраны. Десятки странных историй, которые сторонние люди не поймут.',
+    'Через него — Миха.',
   ],
   'win-vk': [
-    'Я увидел комментарий под постом и написал какую-то ерунду.',
-    'Меня послали нахуй.',
-    'Так появился Петербург.',
-    'И много людей, которых я иначе бы никогда не встретил.',
+    'ВКонтакте, 2012.',
+    'У меня был свой паблик. Увидел её комментарий под одним из постов. Написал что-то дурацкое в личку.',
+    'Был сразу послан нахуй. Так и началось наше общение.',
+    'Через два года я поехал автостопом без денег к человеку, которого никогда не видел, в место, где никогда не был.',
+    'Потом переехал к ней в Петербург. Хотя изначально планировал совсем другой город.',
+    'Не было бы Вали — не было бы питерской ветки. И многих из вас не было бы здесь.',
   ],
   'win-ralph': [
-    'Кто-то написал по поводу рубашки на Авито.',
-    'Мы встретились, разговорились.',
-    'Так появился Кирилл.',
-    'А потом и Егор.',
+    'Авито, 2015.',
+    'Рубашка Ralph Lauren очень дурацкой расцветки. Написал какой-то странный чел — встретились в метро, диалог завязался сразу.',
+    'Потом — каждый секонд-хенд в городе, половина Прибалтики.',
+    'В Лондоне нас чуть не кинули с хатой в районе Джека Потрошителя. Как-то раз Кирилл гасился от военкомата у меня целую неделю.',
+    'Через него я случайно узнал Егора. Уверен, с ним у нас ещё всё впереди.',
   ],
   'win-coldcall': [
-    'Один из сотен холодных звонков.',
-    'Обычный рабочий день.',
-    'Так появился Никита.',
-    'И ещё несколько людей из этой комнаты.',
+    'Холодный звонок, 2020.',
+    'Один из сотен таких звонков. Никита не взял трубку с первого раза. Почему-то решил перезвонить.',
+    'Сделку провели довольно быстро, после чего начали общаться и очень близко сдружились.',
+    'Через Никиту — Сеня и Рома. Они знают, почему я называю их баюками.',
+    'Через Никиту — Настя. Если бы не она, я бы не устроил эту вечеринку. Она вдохновила на это.',
+  ],
+  'win-covid': [
+    'Ковид, 2020.',
+    'Если бы не локдаун — я бы не попал случайно в контору под названием Тренд.',
+    'Там я познакомился с Саней Тригубом — у него татуировка на лбу, написано «Не реанимировать». И с Валей Точицким.',
+    'Оба те ещё психи в хорошем смысле. С Валей нам ещё предстоит заработать миллиард.',
   ],
   'win-depo': [
-    'Я уже собирался удалять анкету.',
-    'Увидел упоминание Boulevard Depo.',
-    'Подумал: почему бы не написать.',
-    'Так появилась Маша.',
+    'Pure, 2022. Наверное, одна из самых странных случайностей в этом списке.',
+    'После нескольких отношений решил разобраться в себе. Ходил на свидания, знакомился с людьми. В какой-то момент от всего этого уже устал.',
+    'Собирался удалять приложение. Перед этим начал листать анкеты в последний раз.',
+    'У Маши в профиле было что-то про Boulevard Depo. Чуть ли не в тот же момент Яндекс подкинул мне его в рекомендации — хотя раньше я его почти не слушал.',
+    'Подумал: забавно. Ладно, напишу. Посмотрим, что за человек.',
+    'Сейчас идёт четвёртый год.',
   ],
   'win-konica': [
     'На этой плёнке 36 кадров.',
@@ -1038,14 +1101,18 @@ const twTexts = {
 // Type characters one by one into an element, return promise
 function typeInto(el, text, speed) {
   return new Promise(resolve => {
-    el.textContent = '';
+    el.innerHTML = '';
+    // text node that grows
+    const textNode = document.createTextNode('');
     const cursor = document.createElement('span');
     cursor.className = 'tw-cursor';
+    cursor.textContent = '|';
+    el.appendChild(textNode);
     el.appendChild(cursor);
     let i = 0;
     const tick = () => {
       if (i < text.length) {
-        el.insertBefore(document.createTextNode(text[i]), cursor);
+        textNode.textContent += text[i];
         i++;
         setTimeout(tick, speed + Math.random() * speed * 0.6);
       } else {
@@ -1084,7 +1151,7 @@ async function typeMainScreen() {
   const btn    = document.getElementById('why-btn');
 
   await new Promise(r => setTimeout(r, 300));
-  await typeInto(header, 'how_did_we_get_here.html — v1.0 — 2003', 28);
+  await typeInto(header, 'how_did_we_get_here.html — v1.0 — 1995', 28);
   await new Promise(r => setTimeout(r, 500));
   await typeInto(line1, 'Если посмотреть на эту комнату,', 32);
   await new Promise(r => setTimeout(r, 200));
@@ -1093,6 +1160,7 @@ async function typeMainScreen() {
   // blinking cursor stays on line2
   const cursor = document.createElement('span');
   cursor.className = 'tw-cursor dim';
+  cursor.textContent = '|';
   line2.appendChild(cursor);
 
   await new Promise(r => setTimeout(r, 400));
@@ -1115,7 +1183,30 @@ document.addEventListener('DOMContentLoaded', typeMainScreen);
 //     { type: 'audio', src: 'boulevard_depo.mp3' },
 //   ],
 // };
-const mediaMap = {};
+const mediaMap = {
+  'krasnoyarsk': [
+    { type: 'img', src: 'img/krasnoyarsk_1.jpg' },
+    { type: 'img', src: 'img/krasnoyarsk_2.jpg' },
+    { type: 'img', src: 'img/krasnoyarsk_3.jpg' },
+    { type: 'img', src: 'img/krasnoyarsk_4.jpg' },
+  ],
+  'vk': [
+    { type: 'img', src: 'img/vk_1.jpg' },
+  ],
+  'ralph': [
+    { type: 'img', src: 'img/ralph_1.jpg' },
+    { type: 'img', src: 'img/ralph_2.jpg' },
+  ],
+  'coldcall': [
+    { type: 'img', src: 'img/coldcall_1.jpg' },
+    { type: 'img', src: 'img/coldcall_2.jpg' },
+    { type: 'img', src: 'img/coldcall_3.jpg' },
+  ],
+  'depo': [
+    { type: 'img', src: 'img/depo_1.jpg' },
+    { type: 'img', src: 'img/depo_2.jpg' },
+  ],
+};
 
 function injectMedia() {
   for (const [winId, items] of Object.entries(mediaMap)) {

@@ -64,17 +64,29 @@ html, body {
   100% { background-position: 0 8px; }
 }
 @keyframes vhs-glitch {
-  0%,93%,100% { clip-path: none; transform: none; }
-  94% { clip-path: polygon(0 30%, 100% 30%, 100% 33%, 0 33%); transform: translateX(-3px); }
-  95% { clip-path: polygon(0 60%, 100% 60%, 100% 62%, 0 62%); transform: translateX(2px); }
-  96% { clip-path: none; transform: none; }
-  97% { clip-path: polygon(0 10%, 100% 10%, 100% 12%, 0 12%); transform: translateX(-1px); }
-  98% { clip-path: none; transform: none; }
+  0%,93%,100% { opacity: 0; }
+  94% { opacity: 1; transform: translateX(-2px); }
+  95% { opacity: 1; transform: translateX(2px); }
+  96% { opacity: 0; }
 }
 
 body {
-  animation: crt-flicker 7s infinite;
   position: relative;
+}
+
+/* flicker overlay — on separate div so content never disappears */
+.vhs-flicker {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9994;
+  animation: crt-flicker 7s infinite;
+  background: rgba(0,0,0,0);
+}
+@keyframes crt-flicker-overlay {
+  0%,100%  { background: rgba(0,0,0,0); }
+  89%      { background: rgba(0,0,0,0.12); }
+  90%      { background: rgba(0,0,0,0); }
+  94%      { background: rgba(0,0,0,0.07); }
+  95%      { background: rgba(0,0,0,0); }
 }
 
 /* grain noise */
@@ -124,12 +136,13 @@ body::after {
   100% { top: 100vh; opacity:0; }
 }
 
-/* glitch layer */
+/* glitch layer — subtle horizontal shift only, no clip */
 .vhs-glitch {
   position:fixed; inset:0;
-  pointer-events:none; z-index:9995;
+  pointer-events:none; z-index:9993;
+  background: linear-gradient(90deg, rgba(255,0,0,0.015), rgba(0,255,255,0.015));
   animation: vhs-glitch 11s infinite;
-  background: inherit;
+  opacity: 0;
 }
 
 /* ===== MAIN ===== */
@@ -149,8 +162,6 @@ body::after {
   letter-spacing: 6px;
   text-transform: uppercase;
   margin-bottom: 48px;
-  opacity: 0;
-  transition: opacity 0.6s ease;
 }
 
 .invite-block {
@@ -160,8 +171,6 @@ body::after {
   line-height: 2.4;
   letter-spacing: 1px;
   margin-bottom: 48px;
-  opacity: 0;
-  transition: opacity 0.6s ease;
 }
 
 .invite-block .highlight {
@@ -172,8 +181,6 @@ body::after {
   display:flex; flex-direction:column;
   align-items:center; gap:10px;
   margin-bottom: 60px;
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
 
 @keyframes blink {
@@ -353,6 +360,7 @@ body::after {
 <div class="vhs-overlay"></div>
 <div class="vhs-line"></div>
 <div class="vhs-glitch"></div>
+<div class="vhs-flicker" style="animation: crt-flicker-overlay 7s infinite;"></div>
 
 <div id="main">
   <div class="invite-name" id="inv-name">СЕМЁН</div>
@@ -431,18 +439,27 @@ body::after {
 const ARCHIVE_PASSWORD = 'coincidence';
 // ====================================
 
-// Fade in elements sequentially
-window.addEventListener('load', () => {
+// Fade in elements sequentially — progressive enhancement
+(function() {
+  const name    = document.getElementById('inv-name');
+  const block   = document.getElementById('inv-block');
+  const actions = document.getElementById('inv-actions');
+  if (!name) return;
+
+  // start hidden only if JS is running
+  [name, block, actions].forEach(el => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.6s ease';
+  });
+
   setTimeout(() => {
-    document.getElementById('inv-name').style.opacity = '1';
+    name.style.opacity = '1';
     setTimeout(() => {
-      document.getElementById('inv-block').style.opacity = '1';
-      setTimeout(() => {
-        document.getElementById('inv-actions').style.opacity = '1';
-      }, 400);
-    }, 300);
-  }, 200);
-});
+      block.style.opacity = '1';
+      setTimeout(() => { actions.style.opacity = '1'; }, 350);
+    }, 280);
+  }, 150);
+})();
 
 // ===== PASSWORD WINDOW =====
 function openPwWindow() {
