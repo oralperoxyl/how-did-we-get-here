@@ -696,14 +696,13 @@ body::after {
 }
 .back-link:hover { color:#666; }
 </style>
-<!-- PASSWORD GUARD (активируется на хостинге) -->
+<!-- PASSWORD GUARD -->
 <script>
 (function(){
-  // Раскомментируй после деплоя на GitHub Pages:
-  // const ARCHIVE_PASSWORD = 'coincidence';
-  // if (sessionStorage.getItem('archive_auth') !== ARCHIVE_PASSWORD) {
-  //   window.location.replace('index.html');
-  // }
+  const ARCHIVE_PASSWORD = 'coincidence';
+  if (sessionStorage.getItem('archive_auth') !== ARCHIVE_PASSWORD) {
+    window.location.replace('index.html');
+  }
 })();
 </script>
 </head>
@@ -1404,18 +1403,7 @@ async function typeMainScreen() {
 
 document.addEventListener('DOMContentLoaded', typeMainScreen);
 
-// После того как ты загрузишь медиа, вставь пути сюда.
-// Формат: { windowId: [ { type: 'img'|'audio'|'video', src: '...' }, ... ] }
-// Пример:
-// const mediaMap = {
-//   'win-krasnoyarsk': [
-//     { type: 'img', src: 'krasnoyarsk_1.jpg' },
-//     { type: 'img', src: 'krasnoyarsk_2.jpg' },
-//   ],
-//   'win-depo': [
-//     { type: 'audio', src: 'boulevard_depo.mp3' },
-//   ],
-// };
+// ===== MEDIA =====
 const mediaMap = {
   'krasnoyarsk': [
     { type: 'img', src: 'img/krasnoyarsk_1.jpg' },
