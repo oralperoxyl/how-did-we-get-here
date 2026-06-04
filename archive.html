@@ -491,8 +491,21 @@ body::after {
 .entry-date { font-size: 10px; color: var(--text-dim); font-family: 'Courier New', monospace; margin-bottom: 4px; }
 .entry-text { font-size: 12px; color: #aaa; line-height: 1.6; font-family: Verdana, sans-serif; }
 
-/* Film strip */
-.film-strip { display: flex; gap: 4px; margin: 10px 0; flex-wrap: wrap; }
+/* Film slot — пустые слоты под фото с вечера */
+.film-slot {
+  width: 72px; height: 54px;
+  background: #0a0a0a;
+  border: 2px solid #222;
+  border-right-color: #333; border-bottom-color: #333;
+  position: relative;
+}
+.film-slot::after {
+  content: '?';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 16px; color: #222;
+} display: flex; gap: 4px; margin: 10px 0; flex-wrap: wrap; }
 .film-frame {
   width: 56px; height: 42px; background: #111;
   border: 2px solid #333; position: relative; overflow: hidden;
@@ -782,14 +795,23 @@ body::after {
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
     <p><span class="tw-line"></span></p>
-    <div class="film-strip">
-      <div class="film-frame"></div><div class="film-frame"></div>
-      <div class="film-frame"></div><div class="film-frame"></div>
-      <div class="film-frame"></div><div class="film-frame"></div>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <p><span class="tw-line"></span></p>
+    <div class="win98-media" id="media-konica">
+      <!-- слоты под фото с вечера — заполним после проявки -->
+      <div class="photo-strip" id="konica-slots">
+        <div class="film-slot"></div>
+        <div class="film-slot"></div>
+        <div class="film-slot"></div>
+        <div class="film-slot"></div>
+        <div class="film-slot"></div>
+        <div class="film-slot"></div>
+      </div>
+      <p style="font-size:10px;color:#333;margin-top:6px;font-family:'Courier New',monospace;">// Fujicolor C200. 36 exp. ещё не проявлена.</p>
     </div>
-    <p style="font-size:11px;color:#444;margin-top:8px;font-family:'Courier New',monospace;">// 36 кадров. Fujicolor C200.</p>
   </div>
-  <div class="win98-statusbar"><span class="status-dot"></span> konica_minolta_c200.exe &nbsp;|&nbsp; 36 exp</div>
+  <div class="win98-statusbar"><span class="status-dot"></span> konica_minolta_c200.exe &nbsp;|&nbsp; 36 exp &nbsp;|&nbsp; не проявлена</div>
 </div>
 
 <!-- guestbook.txt -->
@@ -1190,9 +1212,12 @@ const twTexts = {
     'Сейчас идёт четвёртый год.',
   ],
   'win-konica': [
-    'На этой плёнке 36 кадров.',
-    'Каждый гость может оставить один.',
-    'Интересно посмотреть, каким окажется этот вечер глазами разных людей.',
+    'Все истории на этом сайте начались с чего-то незначительного.',
+    'Сообщения. Комментария. Несостоявшейся встречи. Холодного звонка.',
+    'На одном из столов лежит моя Konica.',
+    'Если захотите — оставьте на плёнке один момент этого вечера.',
+    'Через неделю я проявлю её.',
+    'И, возможно, среди этих кадров окажется начало какой-нибудь новой истории.',
   ],
 };
 
