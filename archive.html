@@ -505,7 +505,10 @@ body::after {
   display: flex; align-items: center; justify-content: center;
   font-family: 'Courier New', monospace;
   font-size: 16px; color: #222;
-} display: flex; gap: 4px; margin: 10px 0; flex-wrap: wrap; }
+}
+
+/* Film strip */
+.film-strip { display: flex; gap: 4px; margin: 10px 0; flex-wrap: wrap; }
 .film-frame {
   width: 56px; height: 42px; background: #111;
   border: 2px solid #333; position: relative; overflow: hidden;
@@ -1331,6 +1334,7 @@ const mediaMap = {
     { type: 'img', src: 'img/covid_1.jpg' },
     { type: 'img', src: 'img/covid_2.jpg' },
   ],
+  'depo': [
     { type: 'img', src: 'img/depo_1.jpg' },
     { type: 'img', src: 'img/depo_2.jpg' },
   ],
