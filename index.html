@@ -606,7 +606,8 @@ body { animation: crt-flicker 9s infinite; }
     <input type="text" class="guestbook-name-input" id="gb-name" placeholder="аноним" maxlength="40">
     <label class="guestbook-label">сообщение:</label>
     <textarea class="guestbook-input" id="gb-text" placeholder="..." maxlength="300"></textarea>
-    <div style="margin-top:8px;display:flex;justify-content:flex-end;">
+    <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;">
+      <span id="gb-status" style="font-family:'Courier New',monospace;font-size:10px;color:#666;"></span>
       <button class="btn98" onclick="submitGuestbook()">Сохранить</button>
     </div>
     <div class="guestbook-entries" id="gb-entries"></div>
@@ -813,46 +814,102 @@ function updateClock() {
 }
 setInterval(updateClock, 1000); updateClock();
 
-// ===== GUESTBOOK =====
-function loadGuestbook() {
-  try { return JSON.parse(localStorage.getItem('guestbook_semen') || '[]'); } catch { return []; }
+// ===== SUPABASE GUESTBOOK =====
+const SB_URL = 'https://oghiwfwlpbskuxybtdnz.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9naGl3ZndscGJza3V4eWJ0ZG56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzYwMjYsImV4cCI6MjA5NjE1MjAyNn0.1VjVDZnGRTCKua4UfM1ZkA8EDyw4sOWUU-9DvZD88V0';
+
+function sbHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY
+  };
 }
-function saveGuestbook(entries) {
-  try { localStorage.setItem('guestbook_semen', JSON.stringify(entries)); } catch {}
+
+async function fetchEntries() {
+  const res = await fetch(
+    SB_URL + '/rest/v1/guestbook?select=*&order=created_at.desc',
+    { headers: sbHeaders() }
+  );
+  if (!res.ok) return [];
+  return await res.json();
 }
-function renderGuestbook() {
-  const entries = loadGuestbook();
+
+async function insertEntry(name, message) {
+  const res = await fetch(
+    SB_URL + '/rest/v1/guestbook',
+    {
+      method: 'POST',
+      headers: { ...sbHeaders(), 'Prefer': 'return=representation' },
+      body: JSON.stringify({ name, message })
+    }
+  );
+  return res.ok;
+}
+
+function gbSetStatus(msg, color) {
+  const el = document.getElementById('gb-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color || '#888';
+}
+
+async function renderGuestbook() {
   const container = document.getElementById('gb-entries');
   const countEl   = document.getElementById('gb-count');
   if (!container) return;
+
+  container.innerHTML = '<div style="color:#555;font-size:11px;font-family:\'Courier New\',monospace;padding:8px 0;">// загрузка...</div>';
+
+  const entries = await fetchEntries();
   countEl.textContent = entries.length;
+
   if (entries.length === 0) {
-    container.innerHTML = '<div style="color:#3a3a3a;font-size:11px;font-family:\'Courier New\',monospace;padding:8px 0;">// записей пока нет</div>';
+    container.innerHTML = '<div style="color:#444;font-size:11px;font-family:\'Courier New\',monospace;padding:8px 0;">// записей пока нет</div>';
     return;
   }
-  container.innerHTML = [...entries].reverse().map(e => `
-    <div class="guestbook-entry">
-      <div class="entry-name">${esc(e.name||'аноним')}</div>
-      <div class="entry-date">${e.date}</div>
-      <div class="entry-text">${esc(e.text)}</div>
-    </div>`).join('');
+
+  container.innerHTML = entries.map(e => {
+    const d = new Date(e.created_at);
+    const date = d.toLocaleDateString('ru-RU') + ' ' + d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+    return `
+      <div class="guestbook-entry">
+        <div class="entry-name">${esc(e.name || 'аноним')}</div>
+        <div class="entry-date">${date}</div>
+        <div class="entry-text">${esc(e.message || '')}</div>
+      </div>`;
+  }).join('');
 }
-function submitGuestbook() {
-  const name = document.getElementById('gb-name').value.trim() || 'аноним';
-  const text = document.getElementById('gb-text').value.trim();
-  if (!text) return;
-  const entries = loadGuestbook();
-  const now = new Date();
-  entries.push({ name, text, date: now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}) });
-  saveGuestbook(entries);
-  document.getElementById('gb-name').value = '';
-  document.getElementById('gb-text').value = '';
-  renderGuestbook();
+
+async function submitGuestbook() {
+  const nameEl = document.getElementById('gb-name');
+  const textEl = document.getElementById('gb-text');
+  const btn    = document.querySelector('#win-guestbook .btn98');
+  const name   = nameEl.value.trim() || 'аноним';
+  const message = textEl.value.trim();
+  if (!message) return;
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Отправка...'; }
+  gbSetStatus('отправляю...', '#666');
+
+  const ok = await insertEntry(name, message);
+
+  if (ok) {
+    nameEl.value = '';
+    textEl.value = '';
+    gbSetStatus('// сохранено', '#66cc99');
+    setTimeout(() => gbSetStatus(''), 2500);
+    await renderGuestbook();
+  } else {
+    gbSetStatus('// ошибка — попробуйте ещё раз', '#cc6666');
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Сохранить'; }
 }
+
 function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-renderGuestbook();
 
 // ===== TYPEWRITER =====
 const twTexts = {
