@@ -548,8 +548,16 @@ body::after {
 
 <script>
 // ===== ПАРОЛЬ — меняется здесь =====
-const ARCHIVE_PASSWORD = 'coincidence';
+// Чтобы сменить пароль: запусти в консоли браузера:
+// crypto.subtle.digest('SHA-256', new TextEncoder().encode('новый_пароль'))
+//   .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+const ARCHIVE_HASH = '7836790352e86b98665fe3bf2121f6eb213b6cd655db98079a1cd8c61be17885';
 // ====================================
+
+async function hashPassword(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2,'0')).join('');
+}
 
 // Typewriter + fade-in
 (function() {
@@ -614,12 +622,14 @@ function closePwOnOverlay(e) {
 }
 
 let pwAttempts = 0;
-function checkPassword() {
+async function checkPassword() {
   const val = document.getElementById('pw-input').value.trim();
-  if (val === ARCHIVE_PASSWORD) {
+  if (!val) return;
+  const hash = await hashPassword(val);
+  if (hash === ARCHIVE_HASH) {
     document.getElementById('pw-error').textContent = '// доступ разрешён...';
     document.getElementById('pw-error').style.color = '#66cc99';
-    sessionStorage.setItem('archive_auth', ARCHIVE_PASSWORD);
+    sessionStorage.setItem('archive_auth', ARCHIVE_HASH);
     setTimeout(() => {
       window.location.href = 'archive.html';
     }, 600);
