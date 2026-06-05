@@ -323,19 +323,20 @@ body::after {
   /* photo viewer on mobile — centered */
   #photo-viewer {
     z-index: 4000 !important;
+    position: fixed !important;
     width: 92vw !important;
-    left: 50% !important;
+    left: 4vw !important;
+    right: 4vw !important;
     top: 50% !important;
-    transform: translate(-50%, -50%) !important;
     bottom: auto !important;
-    right: auto !important;
+    transform: translateY(-50%) !important;
     transition: none !important;
     max-height: 88vh;
     overflow-y: auto;
   }
   #photo-viewer.active {
     display: block !important;
-    transform: translate(-50%, -50%) !important;
+    transform: translateY(-50%) !important;
   }
 }
 
@@ -1353,8 +1354,8 @@ const twTexts = {
   'win-covid': [
     'Ковид, 2020.',
     'Если бы не локдаун — я бы не попал случайно в контору под названием Тренд.',
-    'Там я познакомился с Саней Тригубом — у него татуировка на лбу, написано «Не реанимировать». И с Валей Точицким.',
-    'Как-то раз сидели у Вали дома, жарили шашлык. Ночью к дому подъехала машина, вышли трое. Приехали за ним. Валя умеет впутываться в истории.',
+    'Там я познакомился с Саней Тригубом — у него татуировка на лбу, написано «Не реанимировать». Историй много, но о них я не буду рассказывать :)',
+    'И с Валей Точицким. Как-то раз сидели у него дома, жарили шашлык. Ночью к дому подъехала машина, вышли трое. Приехали за ним. Валя умеет впутываться в истории.',
     'Нам пришлось выйти и побазарить по-пацански. Шашлык, к счастью, не пострадал.',
     'С Валей нам ещё предстоит заработать миллиард. Главное — чтобы снова никто не приехал.',
   ],
