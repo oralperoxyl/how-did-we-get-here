@@ -336,12 +336,12 @@ body::after {
 }
 
 /* map/cal modal */
-#map-modal, #cal-modal, #dresscode-modal, #wishlist-modal {
+#map-modal, #cal-modal, #dresscode-modal, #wishlist-modal, #chat-modal {
   display:none; position:fixed; inset:0;
   background:rgba(0,0,0,0.65); z-index:2100;
   align-items:center; justify-content:center;
 }
-#map-modal.active, #cal-modal.active, #dresscode-modal.active, #wishlist-modal.active { display:flex; }
+#map-modal.active, #cal-modal.active, #dresscode-modal.active, #wishlist-modal.active, #chat-modal.active { display:flex; }
 
 .modal-win {
   background:#1a1a1a;
@@ -418,6 +418,10 @@ body::after {
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect x="4" y="8" width="24" height="20" rx="1" fill="#c0c0c0" stroke="#888" stroke-width="1"/><rect x="4" y="8" width="24" height="5" fill="#888"/><rect x="13" y="4" width="6" height="6" rx="1" fill="#c0c0c0" stroke="#888" stroke-width="1"/><path d="M16 4 Q12 0 10 4" fill="none" stroke="#888" stroke-width="1"/><path d="M16 4 Q20 0 22 4" fill="none" stroke="#888" stroke-width="1"/><path d="M9 17h14M9 21h10" stroke="#555" stroke-width="1.2"/></svg>
         <span>wishlist.exe</span>
       </div>
+      <div class="invite-file-icon" onclick="openModal('chat-modal')">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect x="2" y="2" width="24" height="28" fill="#0a0a1a" stroke="#444" stroke-width="1"/><path d="M18 2v8h8" fill="none" stroke="#444" stroke-width="1"/><polygon points="18,2 26,10 18,10" fill="#1a1a2a" stroke="#444" stroke-width="0.5"/><path d="M5 12h16M5 15h14M5 18h10M5 21h12M5 24h8" stroke="#2a4a2a" stroke-width="1.2"/><circle cx="24" cy="26" r="4" fill="#0a0a0a" stroke="#333" stroke-width="1"/><path d="M22 26h4M24 24v4" stroke="#cc4444" stroke-width="1.2"/></svg>
+        <span>chat.log</span>
+      </div>
     </div>
   </div>
 </div>
@@ -483,6 +487,31 @@ body::after {
       <span style="color:#666;">P.S.</span><br>
       <span style="color:#777;">Если вы относитесь к тем людям, которым обязательно нужно что-то подарить и иначе будет некомфортно, то в последнее время я откладываю на Ricoh GR IIIx.<br>
       Но это скорее информация для тех, кто всё равно будет спрашивать.</span>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div id="chat-modal" onclick="closeMModal('chat-modal', event)">
+  <div class="modal-win" onclick="event.stopPropagation()" style="max-width:340px;">
+    <div class="modal-titlebar">
+      <span>chat.log</span>
+      <div class="modal-close" onclick="closeModal('chat-modal')">×</div>
+    </div>
+    <div class="modal-menubar" style="background:#1a1a1a;border-bottom:1px solid #333;padding:2px 6px;font-size:11px;color:#444;font-family:Tahoma,sans-serif;">Файл &nbsp; Подключение &nbsp; Справка</div>
+    <div style="background:#050505;padding:14px 12px;font-family:'Courier New',monospace;font-size:12px;line-height:2.2;border-bottom:1px solid #222;">
+      <div style="color:#cc4444;">Connection failed.</div>
+      <div style="color:#333;">————————————————</div>
+      <div style="color:#555;">The server is currently offline.</div>
+      <div style="color:#333;">————————————————</div>
+      <div style="color:#888;">Попробуйте встретиться лично.</div>
+    </div>
+    <div style="background:#1a1a1a;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:'Courier New',monospace;font-size:10px;color:#2a2a2a;">status: disconnected_</span>
+      <button class="btn98" onclick="closeModal('chat-modal')" style="font-size:11px;">[ закрыть ]</button>
+    </div>
+    <div style="background:#111;border-top:1px solid #222;padding:2px 8px;font-size:10px;color:#2a2a2a;font-family:Tahoma,sans-serif;">
+      <span style="color:#cc2222;">●</span> offline &nbsp;|&nbsp; chat.log &nbsp;|&nbsp; 0 users connected
     </div>
   </div>
 </div>
