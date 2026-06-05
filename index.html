@@ -648,10 +648,10 @@ function closeMModal(id, e) {
 
 function addToGoogleCal() {
   const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-    '&text=Семён+31' +
+    '&text=' + encodeURIComponent('Семён 31') +
     '&dates=20260619T163000Z/20260620T010000Z' +
-    '&details=Basement+Loft,+Санкт-Петербург' +
-    '&location=Санкт-Петербург,+набережная+Обводного+канала,+136';
+    '&details=' + encodeURIComponent('Basement Loft, Санкт-Петербург') +
+    '&location=' + encodeURIComponent('Санкт-Петербург, набережная Обводного канала, 136');
   window.open(url, '_blank');
 }
 
@@ -660,11 +660,13 @@ function downloadICS() {
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//how-did-we-get-here//RU',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    'DTSTART:20260619T193000',
-    'DTEND:20260620T040000',
+    'DTSTART;TZID=Europe/Moscow:20260619T193000',
+    'DTEND;TZID=Europe/Moscow:20260620T040000',
     'SUMMARY:Семён 31',
-    'LOCATION:Санкт-Петербург, набережная Обводного канала, 136',
+    'LOCATION:Санкт-Петербург\\, набережная Обводного канала\\, 136',
     'DESCRIPTION:Basement Loft',
     'END:VEVENT',
     'END:VCALENDAR'
@@ -673,7 +675,10 @@ function downloadICS() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'semen_31.ics';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 </script>
 </body>
