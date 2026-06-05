@@ -213,9 +213,10 @@ body::after {
   border-bottom: 2px solid var(--btn-shadow);
   padding: 5px 20px;
   font-family: Tahoma, sans-serif; font-size: 12px;
-  cursor:pointer; min-width:160px;
+  cursor:pointer; width: 220px;
   -webkit-appearance:none;
   letter-spacing: 0.5px;
+  touch-action: manipulation;
 }
 .btn98:active {
   border-top: 2px solid var(--btn-shadow);
@@ -224,8 +225,24 @@ body::after {
   border-bottom: 2px solid var(--btn-hi);
 }
 
-/* archive link */
-/* archive link */
+/* invite file icons */
+.invite-files {
+  display: flex; gap: 28px; margin-top: 16px;
+  justify-content: center;
+}
+.invite-file-icon {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.invite-file-icon span {
+  font-family: Tahoma, sans-serif; font-size: 10px;
+  color: #777; letter-spacing: 0.5px;
+}
+.invite-file-icon:hover span { background: #000080; color: #fff; padding: 1px 3px; }
+.invite-file-icon svg { filter: drop-shadow(1px 1px 0 #000); }
 .archive-link {
   position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
   font-family:'Courier New', monospace; font-size:11px;
@@ -319,12 +336,12 @@ body::after {
 }
 
 /* map/cal modal */
-#map-modal, #cal-modal {
+#map-modal, #cal-modal, #dresscode-modal, #wishlist-modal {
   display:none; position:fixed; inset:0;
   background:rgba(0,0,0,0.65); z-index:2100;
   align-items:center; justify-content:center;
 }
-#map-modal.active, #cal-modal.active { display:flex; }
+#map-modal.active, #cal-modal.active, #dresscode-modal.active, #wishlist-modal.active { display:flex; }
 
 .modal-win {
   background:#1a1a1a;
@@ -392,6 +409,16 @@ body::after {
   <div class="invite-actions" id="inv-actions">
     <button class="btn98" onclick="openModal('map-modal')">[ открыть карту ]</button>
     <button class="btn98" onclick="openModal('cal-modal')">[ добавить в календарь ]</button>
+    <div class="invite-files">
+      <div class="invite-file-icon" onclick="openModal('dresscode-modal')">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect x="2" y="2" width="24" height="28" fill="#fffff0" stroke="#888" stroke-width="1"/><path d="M18 2v8h8" fill="none" stroke="#888" stroke-width="1"/><polygon points="18,2 26,10 18,10" fill="#ddd" stroke="#888" stroke-width="0.5"/><path d="M5 13h16M5 16h16M5 19h12M5 22h10" stroke="#888" stroke-width="1.2"/></svg>
+        <span>dresscode.txt</span>
+      </div>
+      <div class="invite-file-icon" onclick="openModal('wishlist-modal')">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect x="4" y="8" width="24" height="20" rx="1" fill="#c0c0c0" stroke="#888" stroke-width="1"/><rect x="4" y="8" width="24" height="5" fill="#888"/><rect x="13" y="4" width="6" height="6" rx="1" fill="#c0c0c0" stroke="#888" stroke-width="1"/><path d="M16 4 Q12 0 10 4" fill="none" stroke="#888" stroke-width="1"/><path d="M16 4 Q20 0 22 4" fill="none" stroke="#888" stroke-width="1"/><path d="M9 17h14M9 21h10" stroke="#555" stroke-width="1.2"/></svg>
+        <span>wishlist.exe</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -418,6 +445,40 @@ body::after {
       </div>
     </div>
     <div class="pw-statusbar">access_control.sys — v2.1</div>
+  </div>
+</div>
+
+<!-- DRESSCODE MODAL -->
+<div id="dresscode-modal" onclick="closeMModal('dresscode-modal', event)">
+  <div class="modal-win" onclick="event.stopPropagation()">
+    <div class="modal-titlebar">
+      <span>dresscode.txt — Блокнот</span>
+      <div class="modal-close" onclick="closeModal('dresscode-modal')">×</div>
+    </div>
+    <div class="modal-body" style="font-family:Verdana,sans-serif;font-size:12px;color:#bbb;line-height:1.9;">
+      Никаких рамок.<br><br>
+      Приходите в том, в чём вам комфортно.<br>
+      Главное — будьте собой.
+    </div>
+  </div>
+</div>
+
+<!-- WISHLIST MODAL -->
+<div id="wishlist-modal" onclick="closeMModal('wishlist-modal', event)">
+  <div class="modal-win" onclick="event.stopPropagation()">
+    <div class="modal-titlebar">
+      <span>wishlist.exe</span>
+      <div class="modal-close" onclick="closeModal('wishlist-modal')">×</div>
+    </div>
+    <div class="modal-body" style="font-family:Verdana,sans-serif;font-size:12px;color:#bbb;line-height:2;">
+      Файл пуст.<br>
+      Почти.<br><br>
+      Мне всегда было сложно составлять списки подарков.<br>
+      Большинство хороших вещей в моей жизни почему-то появлялись не по списку.<br><br>
+      Если вам просто захочется прийти — этого более чем достаточно.<br>
+      Если захочется что-то подарить — тоже не буду спорить.<br><br>
+      Присутствие важнее.
+    </div>
   </div>
 </div>
 

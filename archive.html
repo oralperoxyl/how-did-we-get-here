@@ -284,29 +284,32 @@ body::after {
 @media (max-width: 600px) {
   .win98-window {
     position: fixed !important;
-    left: 0 !important; right: 0 !important; bottom: 0 !important;
-    top: auto !important;
-    min-width: 0; max-width: 100%;
-    width: 100% !important;
-    border-left: none; border-right: none; border-bottom: none;
-    border-top: 2px solid #fff;
-    border-radius: 0;
-    max-height: 85vh;
+    left: 50% !important;
+    top: 50% !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+    width: 92vw !important;
+    max-width: 92vw !important;
+    min-width: 0 !important;
+    max-height: 82vh;
     overflow-y: auto;
-    transform: translateY(100%);
-    transition: transform 0.25s ease;
+    border: 2px solid #fff;
+    border-right-color: #444;
+    border-bottom-color: #444;
     z-index: 2000 !important;
+    transition: none !important;
+    display: none;
   }
   .win98-window.active {
-    display: block;
-    transform: translateY(0);
+    display: block !important;
+    transform: translate(-50%, -50%) !important;
   }
   .win98-titlebar { cursor: default; }
-  /* overlay behind drawer — must not block touches inside window */
   .win98-window.active::before {
     content: '';
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.6);
     z-index: -1;
     pointer-events: none;
   }
@@ -317,17 +320,22 @@ body::after {
     -webkit-tap-highlight-color: rgba(100,150,255,0.2);
     touch-action: manipulation;
   }
-  /* photo viewer on mobile — full width, higher z */
+  /* photo viewer on mobile — centered */
   #photo-viewer {
     z-index: 4000 !important;
-    width: 96vw !important;
-    left: 2vw !important;
-    top: 5vh !important;
+    width: 92vw !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
     bottom: auto !important;
-    transform: none !important;
+    right: auto !important;
     transition: none !important;
-    max-height: 90vh;
+    max-height: 88vh;
     overflow-y: auto;
+  }
+  #photo-viewer.active {
+    display: block !important;
+    transform: translate(-50%, -50%) !important;
   }
 }
 
@@ -1141,11 +1149,6 @@ function openWin(id) {
     win._positioned = true;
   }
 
-  // mobile overlay
-  if (isMobile()) {
-    document.getElementById('mobile-overlay').classList.add('active');
-  }
-
   win.classList.add('active');
   focusWin(win);
   setStatus(win.querySelector('.win98-titlebar-left').textContent.trim());
@@ -1160,16 +1163,13 @@ function openWin(id) {
 function closeWin(id) {
   const win = document.getElementById(id);
   if (win) { win.classList.remove('active', 'win-focused'); }
-  document.getElementById('mobile-overlay').classList.remove('active');
   setStatus('how_did_we_get_here.html');
 }
 
 function closeMobileOverlay() {
-  // close all active windows
   document.querySelectorAll('.win98-window.active').forEach(w => {
     w.classList.remove('active', 'win-focused');
   });
-  document.getElementById('mobile-overlay').classList.remove('active');
   setStatus('how_did_we_get_here.html');
 }
 
@@ -1337,8 +1337,9 @@ const twTexts = {
   'win-ralph': [
     'Авито, 2015.',
     'Рубашка Ralph Lauren очень дурацкой расцветки. Написал какой-то странный чел — встретились в метро, диалог завязался сразу.',
-    'Потом — каждый секонд-хенд в городе, половина Прибалтики.',
-    'В Лондоне нас чуть не кинули с хатой в районе Джека Потрошителя. Как-то раз Кирилл гасился от военкомата у меня целую неделю.',
+    'Потом — обошли каждый секонд-хенд в городе и половину секондов Скандинавии.',
+    'Жрали 3 meal deal в Лондоне, где нас чуть не кинули с хатой в районе Джека Потрошителя.',
+    'Как-то раз Кирилл гасился от военкомата у меня целую неделю.',
     'Через него я случайно узнал Егора. Уверен, с ним у нас ещё всё впереди.',
   ],
   'win-coldcall': [
