@@ -701,6 +701,13 @@ body::after {
 }
 
 /* hint */
+.main-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .show-hint {
   font-family: 'Courier New', monospace; font-size: 10px;
   color: #2e2e2e; text-align: center; margin-top: 16px; letter-spacing: 1px;
@@ -759,8 +766,31 @@ body::after {
     <span id="quote-line1"></span>
     <span id="quote-line2"></span>
   </div>
-  <button class="btn98 why-btn" id="why-btn" onclick="showDesktop()" style="opacity:0;pointer-events:none">[ почему? ]</button>
+  <div class="main-btns" id="why-btn" style="opacity:0;pointer-events:none">
+    <button class="btn98 why-btn" onclick="showDesktop()">[ почему? ]</button>
+    <button class="btn98 why-btn" onclick="openShortcut()">[ ок ]</button>
+  </div>
   <div class="show-hint" id="hint" style="display:none">— нажмите на иконку, чтобы открыть файл —</div>
+</div>
+
+<!-- SHORTCUT WINDOW -->
+<div class="win98-window" id="win-shortcut" style="max-width:320px;">
+  <div class="win98-titlebar" onmousedown="startDrag(event,'win-shortcut')">
+    <div class="win98-titlebar-left">
+      <svg class="win98-icon-small" viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="12" fill="#c0c0c0" stroke="#888" stroke-width="0.5"/><path d="M4 5h8M4 8h6M8 11h4" stroke="#555" stroke-width="1"/><rect x="1" y="11" width="5" height="3" fill="#000080"/></svg>
+      shortcut.exe
+    </div>
+    <div class="win98-controls"><div class="win98-ctrl" onclick="closeWin('win-shortcut')">×</div></div>
+  </div>
+  <div class="win98-menubar">Файл &nbsp; Правка &nbsp; Справка</div>
+  <div class="win98-content" style="line-height:1.9;">
+    <p style="color:#bbb;">Так тоже можно.</p>
+    <p style="color:#777;">Но тогда вы никогда не узнаете,<br>почему вообще оказались здесь.</p>
+    <div style="margin-top:12px;display:flex;justify-content:flex-end;">
+      <button class="btn98" onclick="closeWin('win-shortcut')">[ вернуться ]</button>
+    </div>
+  </div>
+  <div class="win98-statusbar"><span class="status-dot"></span> shortcut.exe</div>
 </div>
 
 <!-- DESKTOP (только большие экраны) -->
@@ -1423,6 +1453,17 @@ async function typeWindowContent(winId) {
 }
 
 // ===== MAIN SCREEN TYPEWRITER =====
+function openShortcut() {
+  const win = document.getElementById('win-shortcut');
+  if (!win._positioned) {
+    win.style.left = Math.max(40, (window.innerWidth  - 320) / 2) + 'px';
+    win.style.top  = Math.max(40, (window.innerHeight - 200) / 2) + 'px';
+    win._positioned = true;
+  }
+  win.classList.add('active');
+  focusWin(win);
+}
+
 async function typeMainScreen() {
   const header = document.getElementById('site-header-text');
   const line1  = document.getElementById('quote-line1');
