@@ -161,6 +161,36 @@ body::after {
 }
 
 
+/* Win98 scrollbar for wishlist */
+#wishlist-text::-webkit-scrollbar {
+  width: 16px;
+  background: #c0c0c0;
+}
+#wishlist-text::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+#wishlist-text::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  min-height: 20px;
+}
+#wishlist-text::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  height: 16px;
+  display: block;
+}
+
 /* Win95 text selection */
 ::selection { background: #000080; color: #ffffff; }
 ::-moz-selection { background: #000080; color: #ffffff; }
@@ -722,7 +752,7 @@ body::after {
     </div>
     <div style="background:#c0c0c0;padding:10px;">
       <div style="position:relative;">
-        <div id="wishlist-text" style="background:#fff;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:10px 12px;font-family:Verdana,sans-serif;font-size:11px;line-height:2;color:#000;max-height:200px;overflow-y:scroll;">
+        <div id="wishlist-text" style="background:#fff;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:10px 12px;font-family:Verdana,sans-serif;font-size:11px;line-height:2;color:#000;max-height:200px;overflow-y:scroll;scrollbar-width:auto;scrollbar-color:#c0c0c0 #fff;">
           Файл пуст.<br>
           Почти.<br><br>
           Мне всегда было сложно составлять списки подарков.<br>
