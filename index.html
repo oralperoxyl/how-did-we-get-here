@@ -684,64 +684,104 @@ body::after {
 
 <!-- DRESSCODE MODAL -->
 <div id="dresscode-modal" onclick="closeMModal('dresscode-modal', event)">
-  <div class="modal-win" onclick="event.stopPropagation()">
-    <div class="modal-titlebar">
-      <span>dresscode.txt — Блокнот</span>
+  <div class="modal-win" onclick="event.stopPropagation()" style="max-width:360px;">
+    <div class="modal-titlebar" style="background:linear-gradient(to right,#000080,#1084d0);color:#fff;font-size:12px;font-weight:bold;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;font-family:Tahoma,sans-serif;user-select:none;">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <img src="img/icon_txt.png" style="width:14px;height:14px;image-rendering:pixelated;">
+        dresscode.txt — Блокнот
+      </div>
       <div class="modal-close" onclick="closeModal('dresscode-modal')">×</div>
     </div>
-    <div class="modal-body" style="font-family:Verdana,sans-serif;font-size:12px;color:#bbb;line-height:1.9;">
+    <div style="background:#1a1a1a;border-bottom:1px solid #333;padding:2px 6px;font-size:11px;color:#888;font-family:Tahoma,sans-serif;">
+      Файл &nbsp; Правка &nbsp; Формат &nbsp; Справка
+    </div>
+    <div style="background:#fff;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;margin:8px;padding:10px 12px;font-family:'Courier New',monospace;font-size:12px;line-height:2;color:#000;min-height:60px;">
       Никаких рамок.<br><br>
       Приходите в том, в чём вам комфортно.<br>
       Главное — будьте собой.
+    </div>
+    <div style="background:#c0c0c0;border-top:1px solid #808080;padding:2px 6px;font-size:10px;color:#000;font-family:Tahoma,sans-serif;display:flex;gap:6px;">
+      <div style="border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:1px 8px;flex:1;">dresscode.txt</div>
+      <div style="border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:1px 8px;">Ln 1, Col 1</div>
     </div>
   </div>
 </div>
 
 <!-- WISHLIST MODAL -->
 <div id="wishlist-modal" onclick="closeMModal('wishlist-modal', event)">
-  <div class="modal-win" onclick="event.stopPropagation()">
-    <div class="modal-titlebar">
-      <span>wishlist.exe</span>
+  <div class="modal-win" onclick="event.stopPropagation()" style="max-width:380px;">
+    <div class="modal-titlebar" style="background:linear-gradient(to right,#000080,#1084d0);color:#fff;font-size:12px;font-weight:bold;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;font-family:Tahoma,sans-serif;user-select:none;">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <img src="img/icon_wishlist.png" style="width:14px;height:14px;image-rendering:pixelated;">
+        wishlist.exe
+      </div>
       <div class="modal-close" onclick="closeModal('wishlist-modal')">×</div>
     </div>
-    <div class="modal-body" style="font-family:Verdana,sans-serif;font-size:12px;color:#bbb;line-height:2;">
-      Файл пуст.<br>
-      Почти.<br><br>
-      Мне всегда было сложно составлять списки подарков.<br>
-      Большинство хороших вещей в моей жизни почему-то появлялись не по списку.<br>
-      В виде случайных знакомств, разговоров, поездок и людей.<br>
-      Поэтому никакого вишлиста здесь нет.<br><br>
-      Если вам просто захочется прийти — этого более чем достаточно.<br>
-      Если захочется что-то подарить — тоже не буду спорить.<br>
-      Присутствие важнее.<br><br>
-      <span style="color:#666;">P.S.</span><br>
-      <span style="color:#777;">Если вы относитесь к тем людям, которым обязательно нужно что-то подарить и иначе будет некомфортно, то в последнее время я откладываю на Ricoh GR IIIx.<br>
-      Но это скорее информация для тех, кто всё равно будет спрашивать.</span>
+    <div style="background:#1a1a1a;border-bottom:1px solid #333;padding:2px 6px;font-size:11px;color:#888;font-family:Tahoma,sans-serif;">
+      Файл &nbsp; Правка &nbsp; Справка
+    </div>
+    <div style="background:#c0c0c0;padding:10px;">
+      <div style="position:relative;">
+        <div id="wishlist-text" style="background:#fff;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:10px 12px;font-family:Verdana,sans-serif;font-size:11px;line-height:2;color:#000;max-height:200px;overflow-y:scroll;">
+          Файл пуст.<br>
+          Почти.<br><br>
+          Мне всегда было сложно составлять списки подарков.<br>
+          Большинство хороших вещей в моей жизни почему-то появлялись не по списку.<br>
+          В виде случайных знакомств, разговоров, поездок и людей.<br>
+          Поэтому никакого вишлиста здесь нет.<br><br>
+          Если вам просто захочется прийти — этого более чем достаточно.<br>
+          Если захочется что-то подарить — тоже не буду спорить.<br>
+          Присутствие важнее.<br><br>
+          <span style="color:#555;">P.S.<br>
+          Если вы относитесь к тем людям, которым обязательно нужно что-то подарить и иначе будет некомфортно, то в последнее время я откладываю на Ricoh GR IIIx.<br>
+          Но это скорее информация для тех, кто всё равно будет спрашивать.</span>
+        </div>
+        <!-- fade hint -->
+        <div id="wishlist-fade" style="position:absolute;bottom:0;left:0;right:0;height:32px;background:linear-gradient(transparent,#fff);pointer-events:none;transition:opacity 0.3s;"></div>
+      </div>
+      <!-- scroll hint text -->
+      <div id="wishlist-hint" style="font-family:Tahoma,sans-serif;font-size:9px;color:#808080;text-align:right;margin-top:3px;padding-right:2px;">▼ прокрутите вниз</div>
+    </div>
+    <div style="background:#c0c0c0;border-top:1px solid #808080;padding:4px 8px 6px;display:flex;justify-content:flex-end;">
+      <button class="btn98" onclick="closeModal('wishlist-modal')" style="min-width:80px;">OK</button>
     </div>
   </div>
 </div>
 
 <!-- CHAT MODAL -->
 <div id="chat-modal" onclick="closeMModal('chat-modal', event)">
-  <div class="modal-win" onclick="event.stopPropagation()" style="max-width:340px;">
-    <div class="modal-titlebar">
-      <span>chat.log</span>
+  <div class="modal-win" onclick="event.stopPropagation()" style="max-width:360px;">
+    <div class="modal-titlebar" style="background:linear-gradient(to right,#000080,#1084d0);color:#fff;font-size:12px;font-weight:bold;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;font-family:Tahoma,sans-serif;user-select:none;">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <img src="img/icon_chat.png" style="width:14px;height:14px;image-rendering:pixelated;">
+        chat.log
+      </div>
       <div class="modal-close" onclick="closeModal('chat-modal')">×</div>
     </div>
-    <div class="modal-menubar" style="background:#1a1a1a;border-bottom:1px solid #333;padding:2px 6px;font-size:11px;color:#444;font-family:Tahoma,sans-serif;">Файл &nbsp; Подключение &nbsp; Справка</div>
-    <div style="background:#050505;padding:14px 12px;font-family:'Courier New',monospace;font-size:12px;line-height:2.2;border-bottom:1px solid #222;">
-      <div style="color:#cc4444;">Connection failed.</div>
-      <div style="color:#333;">————————————————</div>
-      <div style="color:#555;">The server is currently offline.</div>
-      <div style="color:#333;">————————————————</div>
-      <div style="color:#888;">Попробуйте встретиться лично.</div>
+    <div style="background:#1a1a1a;border-bottom:1px solid #333;padding:2px 6px;font-size:11px;color:#888;font-family:Tahoma,sans-serif;">
+      Файл &nbsp; Подключение &nbsp; Справка
     </div>
-    <div style="background:#1a1a1a;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-family:'Courier New',monospace;font-size:10px;color:#2a2a2a;">status: disconnected_</span>
-      <button class="btn98" onclick="closeModal('chat-modal')" style="font-size:11px;">[ закрыть ]</button>
+    <!-- main content area — Win98 sunken panel -->
+    <div style="background:#c0c0c0;padding:8px;">
+      <div style="background:#fff;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:10px 12px;font-family:'Courier New',monospace;font-size:12px;line-height:2;min-height:80px;">
+        <div style="color:#cc0000;font-weight:bold;">Connection failed.</div>
+        <div style="color:#555;margin-top:2px;">The server is currently offline.</div>
+        <div style="color:#333;margin-top:8px;font-size:11px;">Попробуйте встретиться лично.</div>
+      </div>
     </div>
-    <div style="background:#111;border-top:1px solid #222;padding:2px 8px;font-size:10px;color:#2a2a2a;font-family:Tahoma,sans-serif;">
-      <span style="color:#cc2222;">●</span> offline &nbsp;|&nbsp; chat.log &nbsp;|&nbsp; 0 users connected
+    <!-- button row -->
+    <div style="background:#c0c0c0;padding:6px 8px 8px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #fff;">
+      <span style="font-family:'Courier New',monospace;font-size:10px;color:#555;">status: disconnected_</span>
+      <button class="btn98" onclick="closeModal('chat-modal')" style="min-width:80px;">[ закрыть ]</button>
+    </div>
+    <!-- statusbar -->
+    <div style="background:#c0c0c0;border-top:1px solid #808080;padding:2px 6px;font-size:10px;color:#000;font-family:Tahoma,sans-serif;display:flex;align-items:center;gap:6px;">
+      <div style="border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:1px 6px;display:flex;align-items:center;gap:4px;">
+        <span style="color:#cc0000;">●</span> offline
+      </div>
+      <div style="border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:1px 6px;">
+        0 users connected
+      </div>
     </div>
   </div>
 </div>
@@ -788,6 +828,19 @@ async function hashPassword(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2,'0')).join('');
 }
+
+// Wishlist scroll hint
+(function() {
+  const el   = document.getElementById('wishlist-text');
+  const fade = document.getElementById('wishlist-fade');
+  const hint = document.getElementById('wishlist-hint');
+  if (!el) return;
+  el.addEventListener('scroll', () => {
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 4;
+    if (fade) fade.style.opacity = atBottom ? '0' : '1';
+    if (hint) hint.style.opacity = atBottom ? '0' : '1';
+  });
+})();
 
 // Typewriter + fade-in
 (function() {
