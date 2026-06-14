@@ -752,6 +752,12 @@ body::after {
   margin-top: 20px;
 }
 
+#footer-log {
+  text-align: center; padding: 0 24px 36px;
+  font-family: 'Courier New', monospace; font-size: 10px;
+  color: #3a3a3a; letter-spacing: 0.5px; line-height: 1.8;
+}
+
 /* Win95 text selection */
 ::selection {
   background: #000080;
@@ -809,7 +815,8 @@ body::after {
   /* mobile grid — fixed height, no scroll */
   #mobile-grid { height: calc(100dvh - 22px); overflow: hidden; padding: 0; }
 
-  #footer-quote { font-size: 10px; padding-bottom: 40px; }
+  #footer-quote { font-size: 10px; padding-bottom: 32px; }
+  #footer-log { font-size: 9px; padding-bottom: 40px; }
   .status-cell:last-child { display: none; }
   .win98-content { font-size: 13px; }
 }
@@ -1135,6 +1142,12 @@ body::after {
 
 <div id="footer-quote">
   Самые важные события почти никогда не выглядят важными в тот момент, когда происходят.
+</div>
+
+<div id="footer-log">
+  Status: восстановлено по памяти.<br>
+  Некоторые детали могут быть неточны.<br>
+  Последствия — нет.
 </div>
 
 <script>
@@ -1486,7 +1499,7 @@ const twTexts = {
     'На одном из столов лежит моя Konica.',
     'Если захотите — оставьте на плёнке один момент этого вечера.',
     'Через неделю я проявлю её.',
-    'И, возможно, среди этих кадров окажется начало какой-нибудь новой истории.',
+    'Интересно, что там получится.',
   ],
 };
 
