@@ -277,11 +277,13 @@ body::after {
   border-top: 2px solid #fff; border-left: 2px solid #fff;
   border-right: 2px solid #444; border-bottom: 2px solid #444;
   min-width: 320px; max-width: 480px;
+  max-height: 85vh;
   z-index: 1000;
   box-shadow: 3px 3px 10px rgba(0,0,0,0.85);
   font-family: Tahoma, Verdana, sans-serif;
+  display: flex; flex-direction: column;
 }
-.win98-window.active { display: block; }
+.win98-window.active { display: flex; }
 
 /* ===== MOBILE DRAWER ===== */
 @media (max-width: 600px) {
@@ -305,7 +307,8 @@ body::after {
     display: none;
   }
   .win98-window.active {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
     transform: translate(-50%, -50%) !important;
   }
   .win98-titlebar { cursor: default; }
@@ -387,6 +390,7 @@ body::after {
 .win98-content {
   padding: 14px; color: var(--text); font-size: 13px;
   line-height: 1.85; font-family: Verdana, sans-serif;
+  overflow-y: auto; flex: 1;
 }
 .win98-content p { margin-bottom: 10px; color: #bbb; }
 
@@ -1256,14 +1260,14 @@ function showDesktop() {
 let zCounter = 1100;
 
 const desktopOffsets = {
-  'win-krasnoyarsk': [80,  60],
-  'win-vk':          [160, 100],
-  'win-ralph':       [240, 80],
-  'win-coldcall':    [120, 145],
-  'win-covid':       [320, 130],
-  'win-depo':        [300, 60],
-  'win-konica':      [200, 165],
-  'win-guestbook':   [100, 85],
+  'win-krasnoyarsk': [80,  50],
+  'win-vk':          [160, 70],
+  'win-ralph':       [240, 50],
+  'win-coldcall':    [120, 90],
+  'win-covid':       [300, 80],
+  'win-depo':        [280, 50],
+  'win-konica':      [180, 110],
+  'win-guestbook':   [100, 70],
 };
 
 function openWin(id) {
