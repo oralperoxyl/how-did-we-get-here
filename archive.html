@@ -1408,7 +1408,8 @@ async function renderGuestbook() {
 
   container.innerHTML = entries.map(e => {
     const d = new Date(e.created_at);
-    const date = d.toLocaleDateString('ru-RU') + ' ' + d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+    const date = d.toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow' }) +
+      ' ' + d.toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit' });
     return `
       <div class="guestbook-entry">
         <div class="entry-name">${esc(e.name || 'аноним')}</div>
