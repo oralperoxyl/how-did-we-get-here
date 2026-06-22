@@ -272,7 +272,8 @@ body::after {
 
 /* ===== WIN98 WINDOWS — десктоп ===== */
 .win98-window {
-  display: none; position: fixed;
+  display: none;
+  position: fixed;
   background: var(--panel);
   border-top: 2px solid #fff; border-left: 2px solid #fff;
   border-right: 2px solid #444; border-bottom: 2px solid #444;
@@ -281,7 +282,7 @@ body::after {
   z-index: 1000;
   box-shadow: 3px 3px 10px rgba(0,0,0,0.85);
   font-family: Tahoma, Verdana, sans-serif;
-  display: flex; flex-direction: column;
+  flex-direction: column;
 }
 .win98-window.active { display: flex; }
 
@@ -1178,7 +1179,7 @@ const fileObjects = [
   { id: 'win-covid',       label: 'covid.exe',         icon: 'folder', x: 38, y: 60 },
   { id: 'win-depo',        label: 'boulevard_depo.mp3',icon: 'mp3',    x: 34, y: 20 },
   { id: 'win-konica',      label: 'konica.exe',        icon: 'cam',    x: 55, y: 42 },
-  { id: 'win-guestbook',   label: 'guestbook.txt',     icon: 'guest',  x: 14, y: 72 },
+  { id: 'win-guestbook',   label: 'guestbook.txt',     icon: 'guest',  x: 14, y: 62 },
 ];
 
 function showDesktop() {
